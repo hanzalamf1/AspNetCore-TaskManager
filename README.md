@@ -430,8 +430,8 @@ The Menu2 JavaScript module is developed to manage the page's advanced features 
 
 1. **Clone the project:**
 ```bash
-git clone 
-cd ToDoList
+git clone https://github.com/hanzalamf1/AspNetCore-TaskManager.git
+cd AspNetCore-TaskManager
 ```
 
 2. **Configure database connection:**
