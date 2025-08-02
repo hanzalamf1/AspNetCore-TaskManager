@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Takvim - Task Manager</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary-color: #818cf8;
+            --text-dark: #1e293b;
+            --text-light: #64748b;
+            --bg-light: #f8fafc;
+            --border-color: #e2e8f0;
+            --success-color: #22c55e;
+            --error-color: #ef4444;
+            --warning-color: #f59e0b;
+            --info-color: #3b82f6;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+            color: var(--text-dark);
+            background-color: var(--bg-light);
+        }
+
+        /* Navigation Styles */
+        .navbar {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            box-shadow: 0 2px 10px rgba(99, 102, 241, 0.1);
+            padding: 1rem 0;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: white !important;
+        }
+
+        .navbar-nav .nav-link {
+            color: rgba(255, 255, 255, 0.9) !important;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            margin: 0 0.25rem;
+        }
+
+        .navbar-nav .nav-link:hover,
+        .navbar-nav .nav-link.active {
+            color: white !important;
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: translateY(-1px);
+        }
+
+        /* User Dropdown Styles */
+        .user-dropdown .dropdown-toggle {
+            color: white !important;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .user-dropdown .dropdown-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .user-dropdown .dropdown-menu {
+            border: none;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            padding: 0.5rem;
+            min-width: 200px;
+        }
+
+        .user-dropdown .dropdown-item {
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .user-dropdown .dropdown-item:hover {
+            background-color: var(--bg-light);
+            transform: translateX(2px);
+        }
+
+        .remaining-days {
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        /* Calendar Page Styles */
+        .calendar-container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .calendar-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .calendar-header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+        }
+
+        .calendar-header p {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Calendar Controls */
+        .calendar-controls {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .calendar-nav {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .calendar-nav button {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .calendar-nav button:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .current-month {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            min-width: 200px;
+            text-align: center;
+        }
+
+        .calendar-views {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .view-btn {
+            padding: 0.5rem 1rem;
+            border: 2px solid var(--border-color);
+            background: white;
+            color: var(--text-dark);
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .view-btn.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .view-btn:hover {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        /* Calendar Grid */
+        .calendar-grid {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+
+        .calendar-weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            background: var(--bg-light);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .weekday-header {
+            padding: 1rem;
+            text-align: center;
+            font-weight: 600;
+            color: var(--text-dark);
+            border-right: 1px solid var(--border-color);
+        }
+
+        .weekday-header:last-child {
+            border-right: none;
+        }
+
+        .calendar-days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+        }
+
+        .calendar-day {
+            min-height: 120px;
+            padding: 0.5rem;
+            border-right: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .calendar-day:hover {
+            background: var(--bg-light);
+        }
+
+        .calendar-day.other-month {
+            background: #f8f9fa;
+            color: var(--text-light);
+        }
+
+        .calendar-day.today {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(129, 140, 248, 0.1) 100%);
+            border: 2px solid var(--primary-color);
+        }
+
+        .day-number {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .day-tasks {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .task-item {
+            background: var(--primary-color);
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .task-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .task-item.completed {
+            background: var(--success-color);
+        }
+
+        .task-item.pending {
+            background: var(--warning-color);
+        }
+
+        .task-item.overdue {
+            background: var(--error-color);
+        }
+
+        .more-tasks {
+            color: var(--primary-color);
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            text-align: center;
+            padding: 0.25rem;
+        }
+
+        .more-tasks:hover {
+            background: var(--bg-light);
+            border-radius: 4px;
+        }
+
+        /* Quick Add Task */
+        .quick-add-section {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            margin-bottom: 2rem;
+        }
+
+        .quick-add-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            align-items: end;
+        }
+
+        .form-group {
+            margin-bottom: 0;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .form-control {
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+            outline: none;
+        }
+
+        .btn {
+            border-radius: 8px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+        }
+
+        /* Task Modal */
+        .task-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .task-modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin: 0;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-light);
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .close-btn:hover {
+            background: var(--bg-light);
+            color: var(--text-dark);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .calendar-container {
+                margin: 1rem auto;
+            }
+
+            .calendar-header h1 {
+                font-size: 2rem;
+            }
+
+            .calendar-controls {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .calendar-nav {
+                justify-content: center;
+            }
+
+            .calendar-views {
+                justify-content: center;
+            }
+
+            .calendar-day {
+                min-height: 80px;
+                padding: 0.25rem;
+            }
+
+            .day-number {
+                font-size: 0.9rem;
+            }
+
+            .task-item {
+                font-size: 0.7rem;
+                padding: 0.2rem 0.4rem;
+            }
+
+            .quick-add-form {
+                grid-template-columns: 1fr;
+            }
+
+            .navbar-nav {
+                text-align: center;
+                margin-top: 1rem;
+            }
+
+            .user-dropdown {
+                margin-top: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="home.html" style="font-size:0.87rem;">
+                <i class="fas fa-tasks me-2" style="font-size:0.87rem;"></i>Task Manager
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item"><a class="nav-link" href="home.html" style="font-size:0.63rem;">Ana Sayfa</a></li>
+                    <li class="nav-item"><a class="nav-link" href="menu1.html" style="font-size:0.63rem;">1. Menü</a></li>
+                    <li class="nav-item"><a class="nav-link" href="menu2.html" style="font-size:0.63rem;">2. Menü</a></li>
+                    <li class="nav-item"><a class="nav-link" href="dashboard.html" style="font-size:0.63rem;">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="tasks.html" style="font-size:0.63rem;">Görevler</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="calendar.html" style="font-size:0.63rem;">Takvim</a></li>
+                    <li class="nav-item"><a class="nav-link" href="import-export.html" style="font-size:0.63rem;">İçe/Dışa Aktar</a></li>
+                    <li class="nav-item"><a class="nav-link" href="features.html" style="font-size:0.63rem;">Özellikler</a></li>
+                    <li class="nav-item"><a class="nav-link" href="help.html" style="font-size:0.63rem;">Yardım</a></li>
+                    <li class="nav-item"><a class="nav-link" href="profile.html" style="font-size:0.63rem;">Profil</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contact.html" style="font-size:0.63rem;">İletişim</a></li>
+                </ul>
+                <div class="user-dropdown dropdown">
+                    <button class="btn dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" style="font-size:0.63rem;">
+                        <i class="fas fa-user me-2" style="font-size:0.63rem;"></i>
+                        <span id="userName">Kullanıcı Adı</span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li>
+                            <div class="remaining-days" style="font-size:0.63rem;">
+                                <i class="fas fa-calendar-day me-2" style="font-size:0.63rem;"></i>
+                                Kalan Gün: <span id="remainingDays">30</span>
+                            </div>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="settings.html" style="font-size:0.63rem;"><i class="fas fa-cog me-2" style="font-size:0.63rem;"></i>Ayarlar</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="logout()" style="font-size:0.63rem;"><i class="fas fa-sign-out-alt me-2" style="font-size:0.63rem;"></i>Çıkış Yap</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Calendar Content -->
+    <div class="calendar-container">
+        <div class="calendar-header">
+            <h1><i class="fas fa-calendar me-2"></i>Takvim</h1>
+            <p>Görevlerinizi takvim görünümünde planlayın ve takip edin</p>
+        </div>
+
+        <!-- Quick Add Task -->
+        <div class="quick-add-section">
+            <h3 class="mb-3"><i class="fas fa-plus me-2"></i>Hızlı Görev Ekle</h3>
+            <form class="quick-add-form" id="quickAddForm">
+                <div class="form-group">
+                    <label for="taskTitle" class="form-label">Görev Başlığı</label>
+                    <input type="text" class="form-control" id="taskTitle" placeholder="Görev başlığı girin" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="taskDate" class="form-label">Tarih</label>
+                    <input type="date" class="form-control" id="taskDate" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="taskPriority" class="form-label">Öncelik</label>
+                    <select class="form-control" id="taskPriority">
+                        <option value="low">Düşük</option>
+                        <option value="medium" selected>Orta</option>
+                        <option value="high">Yüksek</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="taskDescription" class="form-label">Açıklama</label>
+                    <input type="text" class="form-control" id="taskDescription" placeholder="Görev açıklaması (isteğe bağlı)">
+                </div>
+                
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-plus me-2"></i>Görev Ekle
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Calendar Controls -->
+        <div class="calendar-controls">
+            <div class="calendar-nav">
+                <button onclick="previousMonth()">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <div class="current-month" id="currentMonth">Aralık 2024</div>
+                <button onclick="nextMonth()">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+            
+            <div class="calendar-views">
+                <button class="view-btn" onclick="goToToday()">
+                    <i class="fas fa-calendar-day me-1"></i>Bugün
+                </button>
+                <button class="view-btn active" onclick="setView('month')">
+                    <i class="fas fa-calendar-alt me-1"></i>Ay
+                </button>
+                <button class="view-btn" onclick="setView('week')">
+                    <i class="fas fa-calendar-week me-1"></i>Hafta
+                </button>
+            </div>
+        </div>
+
+        <!-- Calendar Grid -->
+        <div class="calendar-grid">
+            <div class="calendar-weekdays">
+                <div class="weekday-header">Pazartesi</div>
+                <div class="weekday-header">Salı</div>
+                <div class="weekday-header">Çarşamba</div>
+                <div class="weekday-header">Perşembe</div>
+                <div class="weekday-header">Cuma</div>
+                <div class="weekday-header">Cumartesi</div>
+                <div class="weekday-header">Pazar</div>
+            </div>
+            <div class="calendar-days" id="calendarDays">
+                <!-- Calendar days will be generated here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Task Modal -->
+    <div class="task-modal" id="taskModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Görev Detayları</h3>
+                <button class="close-btn" onclick="closeTaskModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div id="taskModalContent">
+                <!-- Task details will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // API URL
+        const API_URL = 'https://localhost:7187/api';
+
+        // Calendar state
+        let currentDate = new Date();
+        let currentView = 'month';
+        let tasks = [];
+
+        // User authentication check and data loading
+        document.addEventListener('DOMContentLoaded', function() {
+            loadUserData();
+            loadTasks();
+            renderCalendar();
+            setupQuickAddForm();
+        });
+
+        // Load user data from localStorage or API
+        function loadUserData() {
+            const token = localStorage.getItem('token');
+            const userData = localStorage.getItem('userData');
+
+            if (token && userData) {
+                try {
+                    const user = JSON.parse(userData);
+                    document.getElementById('userName').textContent = user.username || 'Kullanıcı';
+                    document.getElementById('remainingDays').textContent = user.remainingDays || '0';
+                } catch (error) {
+                    console.error('User data parsing error:', error);
+                    redirectToLogin();
+                }
+            } else {
+                redirectToLogin();
+            }
+        }
+
+        // Load tasks from API
+        async function loadTasks() {
+            const token = localStorage.getItem('token');
+            
+            try {
+                const response = await fetch(`${API_URL}/tasks`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (response.ok) {
+                    tasks = await response.json();
+                    renderCalendar();
+                }
+            } catch (error) {
+                console.error('Tasks loading error:', error);
+            }
+        }
+
+        // Render calendar
+        function renderCalendar() {
+            const calendarDays = document.getElementById('calendarDays');
+            const currentMonth = document.getElementById('currentMonth');
+            
+            // Update month display
+            const monthNames = [
+                'Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran',
+                'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'
+            ];
+            currentMonth.textContent = `${monthNames[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
+            
+            // Generate calendar days
+            const firstDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+            const lastDay = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+            const startDate = new Date(firstDay);
+            startDate.setDate(startDate.getDate() - firstDay.getDay() + 1);
+            
+            let calendarHTML = '';
+            
+            for (let i = 0; i < 42; i++) {
+                const date = new Date(startDate);
+                date.setDate(startDate.getDate() + i);
+                
+                const isOtherMonth = date.getMonth() !== currentDate.getMonth();
+                const isToday = isSameDay(date, new Date());
+                const dayTasks = getTasksForDate(date);
+                
+                calendarHTML += `
+                    <div class="calendar-day ${isOtherMonth ? 'other-month' : ''} ${isToday ? 'today' : ''}" 
+                         onclick="openTaskModal('${date.toISOString()}')">
+                        <div class="day-number">${date.getDate()}</div>
+                        <div class="day-tasks">
+                            ${renderDayTasks(dayTasks)}
+                        </div>
+                    </div>
+                `;
+            }
+            
+            calendarDays.innerHTML = calendarHTML;
+        }
+
+        // Get tasks for a specific date
+        function getTasksForDate(date) {
+            return tasks.filter(task => {
+                const taskDate = new Date(task.dueDate || task.createdAt);
+                return isSameDay(taskDate, date);
+            });
+        }
+
+        // Render tasks for a day
+        function renderDayTasks(dayTasks) {
+            if (dayTasks.length === 0) return '';
+            
+            const maxTasks = 3;
+            const visibleTasks = dayTasks.slice(0, maxTasks);
+            const remainingTasks = dayTasks.length - maxTasks;
+            
+            let html = visibleTasks.map(task => `
+                <div class="task-item ${task.isCompleted ? 'completed' : task.dueDate && new Date(task.dueDate) < new Date() ? 'overdue' : 'pending'}" 
+                     onclick="event.stopPropagation(); openTaskDetails(${task.id})">
+                    ${task.title}
+                </div>
+            `).join('');
+            
+            if (remainingTasks > 0) {
+                html += `<div class="more-tasks" onclick="event.stopPropagation(); showMoreTasks(${dayTasks.length})">+${remainingTasks} daha</div>`;
+            }
+            
+            return html;
+        }
+
+        // Check if two dates are the same day
+        function isSameDay(date1, date2) {
+            return date1.getDate() === date2.getDate() &&
+                   date1.getMonth() === date2.getMonth() &&
+                   date1.getFullYear() === date2.getFullYear();
+        }
+
+        // Navigation functions
+        function previousMonth() {
+            currentDate.setMonth(currentDate.getMonth() - 1);
+            renderCalendar();
+        }
+
+        function nextMonth() {
+            currentDate.setMonth(currentDate.getMonth() + 1);
+            renderCalendar();
+        }
+
+        function goToToday() {
+            currentDate = new Date();
+            renderCalendar();
+        }
+
+        function setView(view) {
+            currentView = view;
+            document.querySelectorAll('.view-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            renderCalendar();
+        }
+
+        // Setup quick add form
+        function setupQuickAddForm() {
+            const form = document.getElementById('quickAddForm');
+            const dateInput = document.getElementById('taskDate');
+            const descInput = document.getElementById('taskDescription');
+            
+            // Set default date to today
+            const today = new Date().toISOString().split('T')[0];
+            dateInput.value = today;
+            
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const title = document.getElementById('taskTitle').value;
+                const date = document.getElementById('taskDate').value;
+                const priority = document.getElementById('taskPriority').value;
+                const description = descInput.value;
+                
+                await addTask(title, date, priority, description);
+                
+                // Reset form
+                form.reset();
+                dateInput.value = today;
+            });
+        }
+
+        // Add new task
+        async function addTask(title, date, priority, description = '') {
+            const token = localStorage.getItem('token');
+            
+            try {
+                const response = await fetch(`${API_URL}/tasks`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        title: title,
+                        description: description,
+                        dueDate: date,
+                        priority: priority
+                    })
+                });
+
+                if (response.ok) {
+                    await loadTasks();
+                    showMessage('Görev başarıyla eklendi!', 'success');
+                } else {
+                    showMessage('Görev eklenirken hata oluştu.', 'error');
+                }
+            } catch (error) {
+                console.error('Add task error:', error);
+                showMessage('Görev eklenirken hata oluştu.', 'error');
+            }
+        }
+
+        // Open task modal
+        function openTaskModal(date) {
+            const modal = document.getElementById('taskModal');
+            const content = document.getElementById('taskModalContent');
+            
+            const selectedDate = new Date(date);
+            const dayTasks = getTasksForDate(selectedDate);
+            
+            content.innerHTML = `
+                <h4>${selectedDate.toLocaleDateString('tr-TR', { 
+                    weekday: 'long', 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                })}</h4>
+                
+                ${dayTasks.length === 0 ? 
+                    '<p class="text-muted">Bu tarihte görev bulunmuyor.</p>' :
+                    dayTasks.map(task => `
+                        <div class="task-item ${task.isCompleted ? 'completed' : task.dueDate && new Date(task.dueDate) < new Date() ? 'overdue' : 'pending'}" 
+                             onclick="openTaskDetails(${task.id})">
+                            <strong>${task.title}</strong>
+                            ${task.description ? `<br><small>${task.description}</small>` : ''}
+                        </div>
+                    `).join('')
+                }
+                
+                <div class="mt-3">
+                    <button class="btn btn-primary" onclick="addTaskForDate('${date}')">
+                        <i class="fas fa-plus me-2"></i>Bu Tarihe Görev Ekle
+                    </button>
+                </div>
+            `;
+            
+            modal.classList.add('show');
+        }
+
+        // Close task modal
+        function closeTaskModal() {
+            const modal = document.getElementById('taskModal');
+            modal.classList.remove('show');
+        }
+
+        // Open task details
+        function openTaskDetails(taskId) {
+            const task = tasks.find(t => t.id === taskId);
+            if (task) {
+                // Redirect to tasks page with task details
+                window.location.href = `tasks.html?task=${taskId}`;
+            }
+        }
+
+        // Add task for specific date
+        function addTaskForDate(date) {
+            document.getElementById('taskDate').value = date.split('T')[0];
+            document.getElementById('taskTitle').focus();
+            closeTaskModal();
+        }
+
+        // Show more tasks
+        function showMoreTasks(count) {
+            alert(`${count} görev bulunuyor. Detayları görmek için görevler sayfasına gidin.`);
+        }
+
+        // Show message
+        function showMessage(message, type) {
+            // Create a simple alert for now
+            alert(message);
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('taskModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeTaskModal();
+            }
+        });
+
+        // Logout function
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('userData');
+            window.location.href = 'login.html';
+        }
+
+        // Redirect to login if not authenticated
+        function redirectToLogin() {
+            window.location.href = 'login.html';
+        }
+
+        // Active navigation highlighting
+        function setActiveNavItem() {
+            const currentPage = window.location.pathname.split('/').pop() || 'calendar.html';
+            const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
+            
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === currentPage) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        // Initialize active navigation
+        setActiveNavItem();
+    </script>
+</body>
+</html> 

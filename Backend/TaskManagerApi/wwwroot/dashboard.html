@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Task Manager</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary-color: #818cf8;
+            --text-dark: #1e293b;
+            --text-light: #64748b;
+            --bg-light: #f8fafc;
+            --border-color: #e2e8f0;
+            --success-color: #22c55e;
+            --error-color: #ef4444;
+            --warning-color: #f59e0b;
+            --info-color: #3b82f6;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+            color: var(--text-dark);
+            background-color: var(--bg-light);
+        }
+
+        /* Navigation Styles */
+        .navbar {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            box-shadow: 0 2px 10px rgba(99, 102, 241, 0.1);
+            padding: 1rem 0;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: white !important;
+        }
+
+        .navbar-nav .nav-link {
+            color: rgba(255, 255, 255, 0.9) !important;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            margin: 0 0.25rem;
+        }
+
+        .navbar-nav .nav-link:hover,
+        .navbar-nav .nav-link.active {
+            color: white !important;
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: translateY(-1px);
+        }
+
+        /* User Dropdown Styles */
+        .user-dropdown .dropdown-toggle {
+            color: white !important;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .user-dropdown .dropdown-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .user-dropdown .dropdown-menu {
+            border: none;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            padding: 0.5rem;
+            min-width: 200px;
+        }
+
+        .user-dropdown .dropdown-item {
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .user-dropdown .dropdown-item:hover {
+            background-color: var(--bg-light);
+            transform: translateX(2px);
+        }
+
+        .remaining-days {
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        /* Dashboard Styles */
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .dashboard-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .dashboard-header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+        }
+
+        .dashboard-header p {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .stat-card.success {
+            border-left-color: var(--success-color);
+        }
+
+        .stat-card.warning {
+            border-left-color: var(--warning-color);
+        }
+
+        .stat-card.info {
+            border-left-color: var(--info-color);
+        }
+
+        .stat-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .stat-icon.primary {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        }
+
+        .stat-icon.success {
+            background: linear-gradient(135deg, var(--success-color) 0%, #16a34a 100%);
+        }
+
+        .stat-icon.warning {
+            background: linear-gradient(135deg, var(--warning-color) 0%, #d97706 100%);
+        }
+
+        .stat-icon.info {
+            background: linear-gradient(135deg, var(--info-color) 0%, #2563eb 100%);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .stat-change {
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .stat-change.positive {
+            color: var(--success-color);
+        }
+
+        .stat-change.negative {
+            color: var(--error-color);
+        }
+
+        /* Charts Section */
+        .charts-section {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-card {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            height: 400px; /* Fixed height to prevent infinite expansion */
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; /* Prevent content overflow */
+        }
+
+        .chart-body {
+            flex: 1; /* Take remaining space */
+            position: relative;
+            overflow: hidden; /* Prevent chart overflow */
+        }
+
+        .chart-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .chart-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+
+        .chart-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .chart-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-sm {
+            padding: 0.25rem 0.75rem;
+            font-size: 0.875rem;
+            border-radius: 6px;
+            border: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-primary {
+            background: transparent;
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+        }
+
+        .btn-outline-primary:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        /* Recent Tasks */
+        .recent-tasks {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            margin-bottom: 2rem;
+        }
+
+        .task-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .task-item:hover {
+            background: var(--bg-light);
+        }
+
+        .task-item:last-child {
+            border-bottom: none;
+        }
+
+        .task-status {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 1rem;
+        }
+
+        .task-status.completed {
+            background: var(--success-color);
+        }
+
+        .task-status.pending {
+            background: var(--warning-color);
+        }
+
+        .task-status.overdue {
+            background: var(--error-color);
+        }
+
+        .task-content {
+            flex: 1;
+        }
+
+        .task-title {
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 0.25rem;
+        }
+
+        .task-meta {
+            font-size: 0.875rem;
+            color: var(--text-light);
+        }
+
+        .task-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .action-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+
+        .action-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1.5rem;
+            background: var(--bg-light);
+            border-radius: 12px;
+            text-decoration: none;
+            color: var(--text-dark);
+            transition: all 0.3s ease;
+        }
+
+        .action-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            color: var(--primary-color);
+        }
+
+        .action-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .action-label {
+            font-weight: 600;
+            text-align: center;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .dashboard-container {
+                margin: 1rem auto;
+            }
+
+            .dashboard-header h1 {
+                font-size: 2rem;
+            }
+
+            .charts-section {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            }
+
+            .navbar-nav {
+                text-align: center;
+                margin-top: 1rem;
+            }
+
+            .user-dropdown {
+                margin-top: 1rem;
+            }
+
+            .action-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="home.html" style="font-size:0.87rem;">
+                <i class="fas fa-tasks me-2" style="font-size:0.87rem;"></i>Task Manager
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item"><a class="nav-link" href="home.html" style="font-size:0.63rem;">Ana Sayfa</a></li>
+                    <li class="nav-item"><a class="nav-link" href="menu1.html" style="font-size:0.63rem;">1. Menü</a></li>
+                    <li class="nav-item"><a class="nav-link" href="menu2.html" style="font-size:0.63rem;">2. Menü</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="dashboard.html" style="font-size:0.63rem;">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="tasks.html" style="font-size:0.63rem;">Görevler</a></li>
+                    <li class="nav-item"><a class="nav-link" href="calendar.html" style="font-size:0.63rem;">Takvim</a></li>
+                    <li class="nav-item"><a class="nav-link" href="import-export.html" style="font-size:0.63rem;">İçe/Dışa Aktar</a></li>
+                    <li class="nav-item"><a class="nav-link" href="features.html" style="font-size:0.63rem;">Özellikler</a></li>
+                    <li class="nav-item"><a class="nav-link" href="help.html" style="font-size:0.63rem;">Yardım</a></li>
+                    <li class="nav-item"><a class="nav-link" href="profile.html" style="font-size:0.63rem;">Profil</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contact.html" style="font-size:0.63rem;">İletişim</a></li>
+                </ul>
+                <div class="user-dropdown dropdown">
+                    <button class="btn dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" style="font-size:0.63rem;">
+                        <i class="fas fa-user me-2" style="font-size:0.63rem;"></i>
+                        <span id="userName">Kullanıcı Adı</span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li>
+                            <div class="remaining-days" style="font-size:0.63rem;">
+                                <i class="fas fa-calendar-day me-2" style="font-size:0.63rem;"></i>
+                                Kalan Gün: <span id="remainingDays">30</span>
+                            </div>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="settings.html" style="font-size:0.63rem;"><i class="fas fa-cog me-2" style="font-size:0.63rem;"></i>Ayarlar</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="logout()" style="font-size:0.63rem;"><i class="fas fa-sign-out-alt me-2" style="font-size:0.63rem;"></i>Çıkış Yap</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Dashboard Content -->
+    <div class="dashboard-container">
+        <div class="dashboard-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1><i class="fas fa-chart-line me-2"></i>Dashboard</h1>
+                    <p>Görev performansınızı takip edin ve verimliliğinizi artırın</p>
+                </div>
+                <div>
+                    <button class="btn btn-primary" onclick="downloadDashboardPDF()">
+                        <i class="fas fa-download me-2"></i>Dashboard PDF İndir
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-number" id="totalTasks">0</div>
+                        <div class="stat-label">Toplam Görev</div>
+                        <div class="stat-change positive">+12% bu hafta</div>
+                    </div>
+                    <div class="stat-icon primary">
+                        <i class="fas fa-tasks"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card success">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-number" id="completedTasks">0</div>
+                        <div class="stat-label">Tamamlanan</div>
+                        <div class="stat-change positive">+8% bu hafta</div>
+                    </div>
+                    <div class="stat-icon success">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card warning">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-number" id="pendingTasks">0</div>
+                        <div class="stat-label">Bekleyen</div>
+                        <div class="stat-change negative">-3% bu hafta</div>
+                    </div>
+                    <div class="stat-icon warning">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card info">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-number" id="completionRate">0%</div>
+                        <div class="stat-label">Tamamlanma Oranı</div>
+                        <div class="stat-change positive">+5% bu hafta</div>
+                    </div>
+                    <div class="stat-icon info">
+                        <i class="fas fa-percentage"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="charts-section">
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3 class="chart-title">Haftalık Görev Performansı</h3>
+                    <div class="chart-actions">
+                        <button class="btn btn-sm btn-outline-primary" onclick="updateChart('week')">Hafta</button>
+                        <button class="btn btn-sm btn-outline-primary" onclick="updateChart('month')">Ay</button>
+                    </div>
+                </div>
+                <div class="chart-body">
+                    <div class="chart-container">
+                        <canvas id="performanceChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3 class="chart-title">Görev Dağılımı</h3>
+                </div>
+                <div class="chart-body">
+                    <div class="chart-container">
+                        <canvas id="distributionChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Tasks and Quick Actions -->
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="recent-tasks">
+                    <div class="chart-header">
+                        <h3 class="chart-title">Son Görevler</h3>
+                        <a href="tasks.html" class="btn btn-sm btn-outline-primary">Tümünü Gör</a>
+                    </div>
+                    <div id="recentTasksList">
+                        <!-- Recent tasks will be loaded here -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="quick-actions">
+                    <div class="chart-header">
+                        <h3 class="chart-title">Hızlı İşlemler</h3>
+                    </div>
+                    <div class="action-grid">
+                        <a href="tasks.html" class="action-item">
+                            <div class="action-icon">
+                                <i class="fas fa-plus"></i>
+                            </div>
+                            <div class="action-label">Yeni Görev</div>
+                        </a>
+                        <a href="settings.html" class="action-item">
+                            <div class="action-icon">
+                                <i class="fas fa-cog"></i>
+                            </div>
+                            <div class="action-label">Ayarlar</div>
+                        </a>
+                        <a href="features.html" class="action-item">
+                            <div class="action-icon">
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <div class="action-label">Özellikler</div>
+                        </a>
+                        <a href="contact.html" class="action-item">
+                            <div class="action-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div class="action-label">İletişim</div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // API URL
+        const API_URL = 'https://localhost:7187/api';
+
+        // Chart instances
+        let performanceChart;
+        let distributionChart;
+
+        // User authentication check and data loading
+        document.addEventListener('DOMContentLoaded', function() {
+            loadUserData();
+            loadDashboardData();
+            initializeCharts();
+        });
+
+        // Load user data from localStorage or API
+        function loadUserData() {
+            const token = localStorage.getItem('token');
+            const userData = localStorage.getItem('userData');
+
+            if (token && userData) {
+                try {
+                    const user = JSON.parse(userData);
+                    document.getElementById('userName').textContent = user.username || 'Kullanıcı';
+                    document.getElementById('remainingDays').textContent = user.remainingDays || '0';
+                } catch (error) {
+                    console.error('User data parsing error:', error);
+                    redirectToLogin();
+                }
+            } else {
+                redirectToLogin();
+            }
+        }
+
+        // Load dashboard data
+        async function loadDashboardData() {
+            const token = localStorage.getItem('token');
+            
+            try {
+                // Load tasks
+                const tasksResponse = await fetch(`${API_URL}/tasks`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (tasksResponse.ok) {
+                    const tasks = await tasksResponse.json();
+                    updateStats(tasks);
+                    updateRecentTasks(tasks);
+                }
+            } catch (error) {
+                console.error('Dashboard data loading error:', error);
+            }
+        }
+
+        // Update statistics
+        function updateStats(tasks) {
+            const totalTasks = tasks.length;
+            const completedTasks = tasks.filter(task => task.isCompleted).length;
+            const pendingTasks = totalTasks - completedTasks;
+            const completionRate = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+
+            document.getElementById('totalTasks').textContent = totalTasks;
+            document.getElementById('completedTasks').textContent = completedTasks;
+            document.getElementById('pendingTasks').textContent = pendingTasks;
+            document.getElementById('completionRate').textContent = completionRate + '%';
+
+            // Animate numbers
+            animateNumber('totalTasks', totalTasks);
+            animateNumber('completedTasks', completedTasks);
+            animateNumber('pendingTasks', pendingTasks);
+        }
+
+        // Update recent tasks
+        function updateRecentTasks(tasks) {
+            const recentTasksList = document.getElementById('recentTasksList');
+            const recentTasks = tasks.slice(0, 5); // Show last 5 tasks
+
+            if (recentTasks.length === 0) {
+                recentTasksList.innerHTML = `
+                    <div class="text-center text-muted py-4">
+                        <i class="fas fa-clipboard-list fa-3x mb-3"></i>
+                        <p>Henüz görev bulunmuyor</p>
+                        <a href="tasks.html" class="btn btn-primary">İlk Görevinizi Oluşturun</a>
+                    </div>
+                `;
+                return;
+            }
+
+            recentTasksList.innerHTML = recentTasks.map(task => `
+                <div class="task-item">
+                    <div class="task-status ${task.isCompleted ? 'completed' : (!task.isCompleted && task.dueDate && new Date(task.dueDate) < new Date() ? 'overdue' : 'pending')}"></div>
+                    <div class="task-content">
+                        <div class="task-title">${task.title}</div>
+                        <div class="task-meta">
+                            ${task.description ? task.description : 'Açıklama yok'} • 
+                            ${task.isCompleted ? 'Tamamlandı' : (!task.isCompleted && task.dueDate && new Date(task.dueDate) < new Date() ? 'Gecikmiş' : 'Bekliyor')}
+                        </div>
+                    </div>
+                    <div class="task-actions">
+                        <a href="tasks.html" class="btn btn-sm btn-outline-primary">
+                            <i class="fas fa-eye"></i>
+                        </a>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Initialize charts
+        function initializeCharts() {
+            // Performance Chart
+            const performanceCtx = document.getElementById('performanceChart').getContext('2d');
+            performanceChart = new Chart(performanceCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt', 'Paz'],
+                    datasets: [{
+                        label: 'Tamamlanan Görevler',
+                        data: [12, 19, 15, 25, 22, 18, 24],
+                        borderColor: '#6366f1',
+                        backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Distribution Chart
+            const distributionCtx = document.getElementById('distributionChart').getContext('2d');
+            distributionChart = new Chart(distributionCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Tamamlandı', 'Bekliyor', 'Gecikmiş'],
+                    datasets: [{
+                        data: [65, 25, 10],
+                        backgroundColor: [
+                            '#22c55e',
+                            '#f59e0b',
+                            '#ef4444'
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+        }
+
+        // Update chart data
+        function updateChart(period) {
+            // Simulate different data for different periods
+            const weekData = [12, 19, 15, 25, 22, 18, 24];
+            const monthData = [45, 52, 48, 58, 55, 62, 59, 65, 58, 52, 48, 55];
+
+            performanceChart.data.labels = period === 'week' 
+                ? ['Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt', 'Paz']
+                : ['1. Hafta', '2. Hafta', '3. Hafta', '4. Hafta'];
+            
+            performanceChart.data.datasets[0].data = period === 'week' ? weekData : monthData;
+            performanceChart.update();
+        }
+
+        // Animate number function
+        function animateNumber(elementId, target) {
+            const element = document.getElementById(elementId);
+            const start = 0;
+            const duration = 1000;
+            const startTime = performance.now();
+            
+            function updateNumber(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                
+                const current = Math.floor(start + (target - start) * progress);
+                element.textContent = current;
+                
+                if (progress < 1) {
+                    requestAnimationFrame(updateNumber);
+                }
+            }
+            
+            requestAnimationFrame(updateNumber);
+        }
+
+        // Logout function
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('userData');
+            window.location.href = 'login.html';
+        }
+
+        // Redirect to login if not authenticated
+        function redirectToLogin() {
+            window.location.href = 'login.html';
+        }
+
+        // Active navigation highlighting
+        function setActiveNavItem() {
+            const currentPage = window.location.pathname.split('/').pop() || 'dashboard.html';
+            const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
+            
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === currentPage) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        // Download Dashboard as PDF
+        async function downloadDashboardPDF() {
+            try {
+                // Show loading message
+                showMessage('PDF hazırlanıyor...', 'info');
+                
+                // Use html2canvas to capture the dashboard
+                const dashboardElement = document.querySelector('.dashboard-container');
+                
+                // Import html2canvas dynamically
+                const html2canvas = await import('https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js');
+                
+                const canvas = await html2canvas.default(dashboardElement, {
+                    scale: 2,
+                    useCORS: true,
+                    allowTaint: true,
+                    backgroundColor: '#ffffff'
+                });
+                
+                // Convert canvas to blob
+                canvas.toBlob(async (blob) => {
+                    // Create download link
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `dashboard_${new Date().toISOString().split('T')[0]}.png`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    window.URL.revokeObjectURL(url);
+                    
+                    showMessage('Dashboard başarıyla indirildi!', 'success');
+                }, 'image/png');
+                
+            } catch (error) {
+                console.error('PDF download error:', error);
+                showMessage('PDF indirme hatası: ' + error.message, 'danger');
+            }
+        }
+
+        // Show message function
+        function showMessage(message, type) {
+            // Remove existing message
+            const existingMessage = document.querySelector('.alert');
+            if (existingMessage) {
+                existingMessage.remove();
+            }
+            
+            // Create new message
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+            messageDiv.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+            messageDiv.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'info' ? 'info-circle' : 'exclamation-triangle'} me-2"></i>
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            document.body.appendChild(messageDiv);
+
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                if (messageDiv.parentNode) {
+                    messageDiv.parentNode.removeChild(messageDiv);
+                }
+            }, 5000);
+        }
+
+        // Initialize active navigation
+        setActiveNavItem();
+    </script>
+</body>
+</html> 

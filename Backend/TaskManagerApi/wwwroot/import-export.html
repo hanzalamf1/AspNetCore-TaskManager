@@ -1,0 +1,1160 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>İçe/Dışa Aktarma - Task Manager</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary-color: #818cf8;
+            --text-dark: #1e293b;
+            --text-light: #64748b;
+            --bg-light: #f8fafc;
+            --border-color: #e2e8f0;
+            --success-color: #22c55e;
+            --error-color: #ef4444;
+            --warning-color: #f59e0b;
+            --info-color: #3b82f6;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+            color: var(--text-dark);
+            background-color: var(--bg-light);
+        }
+
+        /* Navigation Styles */
+        .navbar {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            box-shadow: 0 2px 10px rgba(99, 102, 241, 0.1);
+            padding: 1rem 0;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: white !important;
+        }
+
+        .navbar-nav .nav-link {
+            color: rgba(255, 255, 255, 0.9) !important;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            margin: 0 0.25rem;
+        }
+
+        .navbar-nav .nav-link:hover,
+        .navbar-nav .nav-link.active {
+            color: white !important;
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: translateY(-1px);
+        }
+
+        /* User Dropdown Styles */
+        .user-dropdown .dropdown-toggle {
+            color: white !important;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .user-dropdown .dropdown-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .user-dropdown .dropdown-menu {
+            border: none;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            padding: 0.5rem;
+            min-width: 200px;
+        }
+
+        .user-dropdown .dropdown-item {
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .user-dropdown .dropdown-item:hover {
+            background-color: var(--bg-light);
+            transform: translateX(2px);
+        }
+
+        .remaining-days {
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        /* Import/Export Page Styles */
+        .import-export-container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .import-export-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .import-export-header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+        }
+
+        .import-export-header p {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Main Sections */
+        .main-sections {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .section-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            margin-right: 1rem;
+        }
+
+        .export-icon {
+            background: linear-gradient(135deg, var(--success-color) 0%, #16a34a 100%);
+        }
+
+        .import-icon {
+            background: linear-gradient(135deg, var(--info-color) 0%, #2563eb 100%);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin: 0;
+        }
+
+        .section-description {
+            color: var(--text-light);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        /* Export Options */
+        .export-options {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .export-option {
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .export-option:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.1);
+        }
+
+        .export-option.selected {
+            border-color: var(--primary-color);
+            background: rgba(99, 102, 241, 0.05);
+        }
+
+        .export-option-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .export-option-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: white;
+            margin-right: 1rem;
+        }
+
+        .csv-icon {
+            background: var(--success-color);
+        }
+
+        .json-icon {
+            background: var(--warning-color);
+        }
+
+        .excel-icon {
+            background: var(--info-color);
+        }
+
+        .export-option-title {
+            font-weight: 600;
+            color: var(--text-dark);
+            margin: 0;
+        }
+
+        .export-option-description {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        .export-option-radio {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border-color);
+            border-radius: 50%;
+            background: white;
+        }
+
+        .export-option.selected .export-option-radio {
+            border-color: var(--primary-color);
+            background: var(--primary-color);
+        }
+
+        .export-option.selected .export-option-radio::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+        }
+
+        /* Import Section */
+        .import-area {
+            border: 2px dashed var(--border-color);
+            border-radius: 12px;
+            padding: 3rem 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            margin-bottom: 1.5rem;
+        }
+
+        .import-area:hover {
+            border-color: var(--primary-color);
+            background: rgba(99, 102, 241, 0.05);
+        }
+
+        .import-area.dragover {
+            border-color: var(--primary-color);
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        .import-icon-large {
+            font-size: 3rem;
+            color: var(--text-light);
+            margin-bottom: 1rem;
+        }
+
+        .import-text {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .import-subtext {
+            color: var(--text-light);
+            margin-bottom: 1rem;
+        }
+
+        .import-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .import-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        /* Buttons */
+        .btn {
+            border-radius: 8px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--success-color) 0%, #16a34a 100%);
+            color: white;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3);
+        }
+
+        .btn-info {
+            background: linear-gradient(135deg, var(--info-color) 0%, #2563eb 100%);
+            color: white;
+        }
+
+        .btn-info:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        /* Preview Section */
+        .preview-section {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            margin-top: 2rem;
+            display: none;
+        }
+
+        .preview-section.show {
+            display: block;
+        }
+
+        .preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .preview-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin: 0;
+        }
+
+        .preview-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .preview-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .preview-table th,
+        .preview-table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .preview-table th {
+            background: var(--bg-light);
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .preview-table tr:hover {
+            background: var(--bg-light);
+        }
+
+        /* Progress Bar */
+        .progress-section {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            margin-top: 2rem;
+            display: none;
+        }
+
+        .progress-section.show {
+            display: block;
+        }
+
+        .progress-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .progress-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+        }
+
+        .progress-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin: 0;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--border-color);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            text-align: center;
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        /* Status Messages */
+        .status-message {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .status-message.show {
+            display: block;
+        }
+
+        .status-success {
+            background: rgba(34, 197, 94, 0.1);
+            color: var(--success-color);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+        }
+
+        .status-error {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--error-color);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+
+        .status-warning {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning-color);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .import-export-container {
+                margin: 1rem auto;
+            }
+
+            .import-export-header h1 {
+                font-size: 2rem;
+            }
+
+            .main-sections {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .section-card {
+                padding: 1.5rem;
+            }
+
+            .export-options {
+                grid-template-columns: 1fr;
+            }
+
+            .preview-actions {
+                flex-direction: column;
+            }
+
+            .navbar-nav {
+                text-align: center;
+                margin-top: 1rem;
+            }
+
+            .user-dropdown {
+                margin-top: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="home.html" style="font-size:0.87rem;">
+                <i class="fas fa-tasks me-2" style="font-size:0.87rem;"></i>Task Manager
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item"><a class="nav-link" href="home.html" style="font-size:0.63rem;">Ana Sayfa</a></li>
+                    <li class="nav-item"><a class="nav-link" href="menu1.html" style="font-size:0.63rem;">1. Menü</a></li>
+                    <li class="nav-item"><a class="nav-link" href="menu2.html" style="font-size:0.63rem;">2. Menü</a></li>
+                    <li class="nav-item"><a class="nav-link" href="dashboard.html" style="font-size:0.63rem;">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="tasks.html" style="font-size:0.63rem;">Görevler</a></li>
+                    <li class="nav-item"><a class="nav-link" href="calendar.html" style="font-size:0.63rem;">Takvim</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="import-export.html" style="font-size:0.63rem;">İçe/Dışa Aktar</a></li>
+                    <li class="nav-item"><a class="nav-link" href="features.html" style="font-size:0.63rem;">Özellikler</a></li>
+                    <li class="nav-item"><a class="nav-link" href="help.html" style="font-size:0.63rem;">Yardım</a></li>
+                    <li class="nav-item"><a class="nav-link" href="profile.html" style="font-size:0.63rem;">Profil</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contact.html" style="font-size:0.63rem;">İletişim</a></li>
+                </ul>
+                <div class="user-dropdown dropdown">
+                    <button class="btn dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" style="font-size:0.63rem;">
+                        <i class="fas fa-user me-2" style="font-size:0.63rem;"></i>
+                        <span id="userName">Kullanıcı Adı</span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li>
+                            <div class="remaining-days" style="font-size:0.63rem;">
+                                <i class="fas fa-calendar-day me-2" style="font-size:0.63rem;"></i>
+                                Kalan Gün: <span id="remainingDays">30</span>
+                            </div>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="settings.html" style="font-size:0.63rem;"><i class="fas fa-cog me-2" style="font-size:0.63rem;"></i>Ayarlar</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="logout()" style="font-size:0.63rem;"><i class="fas fa-sign-out-alt me-2" style="font-size:0.63rem;"></i>Çıkış Yap</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Import/Export Content -->
+    <div class="import-export-container">
+        <div class="import-export-header">
+            <h1><i class="fas fa-exchange-alt me-2"></i>İçe/Dışa Aktarma</h1>
+            <p>Görevlerinizi farklı formatlarda dışa aktarın veya harici kaynaklardan içe aktarın</p>
+        </div>
+
+        <!-- Status Messages -->
+        <div id="statusMessage" class="status-message"></div>
+
+        <!-- Main Sections -->
+        <div class="main-sections">
+            <!-- Export Section -->
+            <div class="section-card">
+                <div class="section-header">
+                    <div class="section-icon export-icon">
+                        <i class="fas fa-download"></i>
+                    </div>
+                    <h2 class="section-title">Dışa Aktarma</h2>
+                </div>
+                <p class="section-description">
+                    Görevlerinizi farklı formatlarda dışa aktararak yedekleyin veya başka sistemlerde kullanın.
+                </p>
+
+                <div class="export-options">
+                    <div class="export-option" onclick="selectExportOption('csv')">
+                        <div class="export-option-radio"></div>
+                        <div class="export-option-header">
+                            <div class="export-option-icon csv-icon">
+                                <i class="fas fa-file-csv"></i>
+                            </div>
+                            <div>
+                                <h4 class="export-option-title">CSV Formatı</h4>
+                                <p class="export-option-description">Excel ve diğer tablo uygulamaları için uygun</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="export-option" onclick="selectExportOption('json')">
+                        <div class="export-option-radio"></div>
+                        <div class="export-option-header">
+                            <div class="export-option-icon json-icon">
+                                <i class="fas fa-file-code"></i>
+                            </div>
+                            <div>
+                                <h4 class="export-option-title">JSON Formatı</h4>
+                                <p class="export-option-description">Programatik kullanım için ideal</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="export-option" onclick="selectExportOption('excel')">
+                        <div class="export-option-radio"></div>
+                        <div class="export-option-header">
+                            <div class="export-option-icon excel-icon">
+                                <i class="fas fa-file-excel"></i>
+                            </div>
+                            <div>
+                                <h4 class="export-option-title">Excel Formatı</h4>
+                                <p class="export-option-description">Microsoft Excel ile uyumlu</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn btn-success w-100 mt-3" onclick="exportTasks()">
+                    <i class="fas fa-download me-2"></i>Görevleri Dışa Aktar
+                </button>
+            </div>
+
+            <!-- Import Section -->
+            <div class="section-card">
+                <div class="section-header">
+                    <div class="section-icon import-icon">
+                        <i class="fas fa-upload"></i>
+                    </div>
+                    <h2 class="section-title">İçe Aktarma</h2>
+                </div>
+                <p class="section-description">
+                    Harici kaynaklardan görev verilerinizi içe aktarın. Desteklenen formatlar: CSV, JSON, Excel.
+                </p>
+
+                <div class="import-area" onclick="document.getElementById('fileInput').click()" id="importArea">
+                    <div class="import-icon-large">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                    </div>
+                    <div class="import-text">Dosya Seçin veya Sürükleyin</div>
+                    <div class="import-subtext">CSV, JSON veya Excel dosyaları desteklenir</div>
+                    <button class="import-btn">
+                        <i class="fas fa-folder-open me-2"></i>Dosya Seç
+                    </button>
+                </div>
+
+                <input type="file" id="fileInput" class="file-input" accept=".csv,.json,.xlsx,.xls" onchange="handleFileSelect(event)">
+
+                <div class="mt-3">
+                    <h5><i class="fas fa-info-circle me-2"></i>İçe Aktarma Kuralları</h5>
+                    <ul class="text-muted small">
+                        <li>CSV dosyaları için: Başlık satırı gerekli (title, description, dueDate, priority)</li>
+                        <li>JSON dosyaları için: Görev dizisi formatında olmalı</li>
+                        <li>Excel dosyaları için: İlk satır başlık olarak kullanılır</li>
+                        <li>Maksimum dosya boyutu: 10MB</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Preview Section -->
+        <div class="preview-section" id="previewSection">
+            <div class="preview-header">
+                <h3 class="preview-title">İçe Aktarma Önizlemesi</h3>
+                <div class="preview-actions">
+                    <button class="btn btn-info" onclick="confirmImport()">
+                        <i class="fas fa-check me-2"></i>İçe Aktar
+                    </button>
+                    <button class="btn btn-outline-secondary" onclick="cancelImport()">
+                        <i class="fas fa-times me-2"></i>İptal
+                    </button>
+                </div>
+            </div>
+            <div id="previewContent">
+                <!-- Preview content will be loaded here -->
+            </div>
+        </div>
+
+        <!-- Progress Section -->
+        <div class="progress-section" id="progressSection">
+            <div class="progress-header">
+                <div class="progress-icon">
+                    <i class="fas fa-spinner fa-spin"></i>
+                </div>
+                <h3 class="progress-title">İçe Aktarma İşlemi</h3>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-text" id="progressText">Hazırlanıyor...</div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // API URL
+        const API_URL = 'https://localhost:7187/api';
+
+        // State variables
+        let selectedExportFormat = 'csv';
+        let importData = null;
+        let importFileName = '';
+
+        // User authentication check and data loading
+        document.addEventListener('DOMContentLoaded', function() {
+            loadUserData();
+            setupDragAndDrop();
+        });
+
+        // Load user data from localStorage or API
+        function loadUserData() {
+            const token = localStorage.getItem('token');
+            const userData = localStorage.getItem('userData');
+
+            if (token && userData) {
+                try {
+                    const user = JSON.parse(userData);
+                    document.getElementById('userName').textContent = user.username || 'Kullanıcı';
+                    document.getElementById('remainingDays').textContent = user.remainingDays || '0';
+                } catch (error) {
+                    console.error('User data parsing error:', error);
+                    redirectToLogin();
+                }
+            } else {
+                redirectToLogin();
+            }
+        }
+
+        // Setup drag and drop
+        function setupDragAndDrop() {
+            const importArea = document.getElementById('importArea');
+            const fileInput = document.getElementById('fileInput');
+
+            // Drag and drop events
+            importArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                importArea.classList.add('dragover');
+            });
+
+            importArea.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                importArea.classList.remove('dragover');
+            });
+
+            importArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                importArea.classList.remove('dragover');
+                
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    handleFile(files[0]);
+                }
+            });
+
+            // File input change
+            fileInput.addEventListener('change', function(e) {
+                if (e.target.files.length > 0) {
+                    handleFile(e.target.files[0]);
+                }
+            });
+        }
+
+        // Handle file selection
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (file) {
+                handleFile(file);
+            }
+        }
+
+        // Handle file processing
+        function handleFile(file) {
+            importFileName = file.name;
+            
+            // Check file size (10MB limit)
+            if (file.size > 10 * 1024 * 1024) {
+                showStatus('Dosya boyutu 10MB\'dan büyük olamaz.', 'error');
+                return;
+            }
+
+            // Check file type
+            const fileExtension = file.name.split('.').pop().toLowerCase();
+            if (!['csv', 'json', 'xlsx', 'xls'].includes(fileExtension)) {
+                showStatus('Desteklenmeyen dosya formatı. Lütfen CSV, JSON veya Excel dosyası seçin.', 'error');
+                return;
+            }
+
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                try {
+                    if (fileExtension === 'json') {
+                        importData = JSON.parse(e.target.result);
+                    } else if (fileExtension === 'csv') {
+                        importData = parseCSV(e.target.result);
+                    } else {
+                        // For Excel files, we'll need a library like SheetJS
+                        showStatus('Excel dosyaları için ek kütüphane gerekli. Lütfen CSV formatında deneyin.', 'warning');
+                        return;
+                    }
+                    
+                    showPreview(importData);
+                } catch (error) {
+                    console.error('File parsing error:', error);
+                    showStatus('Dosya okunurken hata oluştu. Lütfen dosya formatını kontrol edin.', 'error');
+                }
+            };
+
+            reader.readAsText(file);
+        }
+
+        // Parse CSV content
+        function parseCSV(csvContent) {
+            const lines = csvContent.split('\n');
+            const headers = lines[0].split(',').map(h => h.trim());
+            const data = [];
+
+            for (let i = 1; i < lines.length; i++) {
+                if (lines[i].trim()) {
+                    const values = lines[i].split(',').map(v => v.trim());
+                    const row = {};
+                    
+                    headers.forEach((header, index) => {
+                        row[header] = values[index] || '';
+                    });
+                    
+                    data.push(row);
+                }
+            }
+
+            return data;
+        }
+
+        // Show preview
+        function showPreview(data) {
+            const previewSection = document.getElementById('previewSection');
+            const previewContent = document.getElementById('previewContent');
+
+            if (!data || data.length === 0) {
+                showStatus('Dosyada geçerli veri bulunamadı.', 'error');
+                return;
+            }
+
+            // Create preview table
+            const headers = Object.keys(data[0]);
+            const previewRows = data.slice(0, 10); // Show first 10 rows
+
+            let tableHTML = `
+                <table class="preview-table">
+                    <thead>
+                        <tr>
+                            ${headers.map(header => `<th>${header}</th>`).join('')}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${previewRows.map(row => `
+                            <tr>
+                                ${headers.map(header => `<td>${row[header] || ''}</td>`).join('')}
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+
+            if (data.length > 10) {
+                tableHTML += `<p class="text-muted mt-2">... ve ${data.length - 10} satır daha</p>`;
+            }
+
+            previewContent.innerHTML = tableHTML;
+            previewSection.classList.add('show');
+        }
+
+        // Select export option
+        function selectExportOption(format) {
+            selectedExportFormat = format;
+            
+            // Update UI
+            document.querySelectorAll('.export-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            event.currentTarget.classList.add('selected');
+        }
+
+        // Export tasks
+        async function exportTasks() {
+            const token = localStorage.getItem('token');
+            
+            try {
+                showStatus('Görevler dışa aktarılıyor...', 'info');
+                
+                const response = await fetch(`${API_URL}/tasks`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (response.ok) {
+                    const tasks = await response.json();
+                    downloadFile(tasks, selectedExportFormat);
+                    showStatus('Görevler başarıyla dışa aktarıldı!', 'success');
+                } else {
+                    showStatus('Görevler dışa aktarılırken hata oluştu.', 'error');
+                }
+            } catch (error) {
+                console.error('Export error:', error);
+                showStatus('Görevler dışa aktarılırken hata oluştu.', 'error');
+            }
+        }
+
+        // Download file
+        function downloadFile(data, format) {
+            let content, filename, mimeType;
+
+            switch (format) {
+                case 'csv':
+                    content = convertToCSV(data);
+                    filename = `tasks_${new Date().toISOString().split('T')[0]}.csv`;
+                    mimeType = 'text/csv';
+                    break;
+                case 'json':
+                    content = JSON.stringify(data, null, 2);
+                    filename = `tasks_${new Date().toISOString().split('T')[0]}.json`;
+                    mimeType = 'application/json';
+                    break;
+                case 'excel':
+                    // For Excel, we'd need a library like SheetJS
+                    showStatus('Excel formatı için ek kütüphane gerekli. JSON formatında indiriliyor.', 'warning');
+                    content = JSON.stringify(data, null, 2);
+                    filename = `tasks_${new Date().toISOString().split('T')[0]}.json`;
+                    mimeType = 'application/json';
+                    break;
+            }
+
+            const blob = new Blob([content], { type: mimeType });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // Convert data to CSV
+        function convertToCSV(data) {
+            if (data.length === 0) return '';
+
+            const headers = Object.keys(data[0]);
+            const csvRows = [headers.join(',')];
+
+            data.forEach(row => {
+                const values = headers.map(header => {
+                    const value = row[header] || '';
+                    return `"${value.toString().replace(/"/g, '""')}"`;
+                });
+                csvRows.push(values.join(','));
+            });
+
+            return csvRows.join('\n');
+        }
+
+        // Confirm import
+        async function confirmImport() {
+            if (!importData) {
+                showStatus('İçe aktarılacak veri bulunamadı.', 'error');
+                return;
+            }
+
+            showProgress();
+            
+            try {
+                const token = localStorage.getItem('token');
+                let successCount = 0;
+                let errorCount = 0;
+
+                for (let i = 0; i < importData.length; i++) {
+                    const task = importData[i];
+                    
+                    try {
+                        const response = await fetch(`${API_URL}/tasks`, {
+                            method: 'POST',
+                            headers: {
+                                'Authorization': `Bearer ${token}`,
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                title: task.title || task.Title || '',
+                                description: task.description || task.Description || '',
+                                dueDate: task.dueDate || task.DueDate || null,
+                                priority: task.priority || task.Priority || 'medium'
+                            })
+                        });
+
+                        if (response.ok) {
+                            successCount++;
+                        } else {
+                            errorCount++;
+                        }
+                    } catch (error) {
+                        errorCount++;
+                    }
+
+                    // Update progress
+                    const progress = ((i + 1) / importData.length) * 100;
+                    updateProgress(progress, `${i + 1} / ${importData.length} görev işlendi`);
+                }
+
+                hideProgress();
+                
+                if (errorCount === 0) {
+                    showStatus(`${successCount} görev başarıyla içe aktarıldı!`, 'success');
+                } else {
+                    showStatus(`${successCount} görev başarıyla, ${errorCount} görev hata ile içe aktarıldı.`, 'warning');
+                }
+
+                // Reset import
+                resetImport();
+                
+            } catch (error) {
+                console.error('Import error:', error);
+                hideProgress();
+                showStatus('İçe aktarma sırasında hata oluştu.', 'error');
+            }
+        }
+
+        // Cancel import
+        function cancelImport() {
+            resetImport();
+            showStatus('İçe aktarma iptal edildi.', 'info');
+        }
+
+        // Reset import
+        function resetImport() {
+            importData = null;
+            importFileName = '';
+            document.getElementById('fileInput').value = '';
+            document.getElementById('previewSection').classList.remove('show');
+            document.getElementById('progressSection').classList.remove('show');
+        }
+
+        // Show progress
+        function showProgress() {
+            document.getElementById('progressSection').classList.add('show');
+            document.getElementById('previewSection').classList.remove('show');
+        }
+
+        // Hide progress
+        function hideProgress() {
+            document.getElementById('progressSection').classList.remove('show');
+        }
+
+        // Update progress
+        function updateProgress(percentage, text) {
+            document.getElementById('progressFill').style.width = percentage + '%';
+            document.getElementById('progressText').textContent = text;
+        }
+
+        // Show status message
+        function showStatus(message, type) {
+            const statusElement = document.getElementById('statusMessage');
+            statusElement.textContent = message;
+            statusElement.className = `status-message status-${type} show`;
+            
+            // Auto hide after 5 seconds
+            setTimeout(() => {
+                statusElement.classList.remove('show');
+            }, 5000);
+        }
+
+        // Logout function
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('userData');
+            window.location.href = 'login.html';
+        }
+
+        // Redirect to login if not authenticated
+        function redirectToLogin() {
+            window.location.href = 'login.html';
+        }
+
+        // Active navigation highlighting
+        function setActiveNavItem() {
+            const currentPage = window.location.pathname.split('/').pop() || 'import-export.html';
+            const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
+            
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === currentPage) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        // Initialize active navigation
+        setActiveNavItem();
+    </script>
+</body>
+</html> 

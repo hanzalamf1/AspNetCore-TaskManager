@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil - Task Manager</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary-color: #818cf8;
+            --text-dark: #1e293b;
+            --text-light: #64748b;
+            --bg-light: #f8fafc;
+            --border-color: #e2e8f0;
+            --success-color: #22c55e;
+            --error-color: #ef4444;
+            --warning-color: #f59e0b;
+            --info-color: #3b82f6;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+            color: var(--text-dark);
+            background-color: var(--bg-light);
+        }
+
+        /* Navigation Styles */
+        .navbar {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            box-shadow: 0 2px 10px rgba(99, 102, 241, 0.1);
+            padding: 1rem 0;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: white !important;
+        }
+
+        .navbar-nav .nav-link {
+            color: rgba(255, 255, 255, 0.9) !important;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            margin: 0 0.25rem;
+        }
+
+        .navbar-nav .nav-link:hover,
+        .navbar-nav .nav-link.active {
+            color: white !important;
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: translateY(-1px);
+        }
+
+        /* User Dropdown Styles */
+        .user-dropdown .dropdown-toggle {
+            color: white !important;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .user-dropdown .dropdown-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .user-dropdown .dropdown-menu {
+            border: none;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            padding: 0.5rem;
+            min-width: 200px;
+        }
+
+        .user-dropdown .dropdown-item {
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .user-dropdown .dropdown-item:hover {
+            background-color: var(--bg-light);
+            transform: translateX(2px);
+        }
+
+        .remaining-days {
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        /* Profile Page Styles */
+        .profile-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .profile-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .profile-header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+        }
+
+        .profile-header p {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .profile-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .profile-card-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .profile-card-header h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-card-header p {
+            opacity: 0.9;
+            margin: 0;
+        }
+
+        .profile-card-body {
+            padding: 2rem;
+        }
+
+        /* Profile Picture Section */
+        .profile-picture-section {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .profile-picture {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid white;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+            font-weight: 700;
+        }
+
+        .profile-picture-placeholder {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+            font-weight: 700;
+            margin: 0 auto 1rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .upload-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 0.5rem 1.5rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .upload-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        /* Profile Info Section */
+        .profile-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .info-section {
+            background: var(--bg-light);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .info-section h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .info-section h3 i {
+            margin-right: 0.5rem;
+            color: var(--primary-color);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .form-control {
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+            outline: none;
+        }
+
+        .form-control:disabled {
+            background-color: #f1f5f9;
+            color: var(--text-light);
+        }
+
+        .btn {
+            border-radius: 8px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--text-light);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: var(--text-dark);
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--success-color) 0%, #16a34a 100%);
+            color: white;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3);
+        }
+
+        /* Stats Section */
+        .stats-section {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            margin-bottom: 2rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1.5rem;
+            background: var(--bg-light);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        /* Activity Section */
+        .activity-section {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .activity-item:hover {
+            background: var(--bg-light);
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1rem;
+            margin-right: 1rem;
+            flex-shrink: 0;
+        }
+
+        .activity-icon.success {
+            background: linear-gradient(135deg, var(--success-color) 0%, #16a34a 100%);
+        }
+
+        .activity-icon.info {
+            background: linear-gradient(135deg, var(--info-color) 0%, #2563eb 100%);
+        }
+
+        .activity-icon.warning {
+            background: linear-gradient(135deg, var(--warning-color) 0%, #d97706 100%);
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-title {
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 0.25rem;
+        }
+
+        .activity-time {
+            font-size: 0.875rem;
+            color: var(--text-light);
+        }
+
+        /* Alert Styles */
+        .alert {
+            border: none;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .alert-success {
+            background: linear-gradient(135deg, var(--success-color) 0%, #16a34a 100%);
+            color: white;
+        }
+
+        .alert-danger {
+            background: linear-gradient(135deg, var(--error-color) 0%, #dc2626 100%);
+            color: white;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .profile-container {
+                margin: 1rem auto;
+            }
+
+            .profile-header h1 {
+                font-size: 2rem;
+            }
+
+            .profile-card-header {
+                padding: 1.5rem;
+            }
+
+            .profile-card-header h2 {
+                font-size: 1.5rem;
+            }
+
+            .profile-card-body {
+                padding: 1.5rem;
+            }
+
+            .navbar-nav {
+                text-align: center;
+                margin-top: 1rem;
+            }
+
+            .user-dropdown {
+                margin-top: 1rem;
+            }
+
+            .profile-info {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+
+            .activity-item {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .activity-icon {
+                margin-right: 0;
+                margin-bottom: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="home.html" style="font-size:0.87rem;">
+                <i class="fas fa-tasks me-2" style="font-size:0.87rem;"></i>Task Manager
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item"><a class="nav-link" href="home.html" style="font-size:0.63rem;">Ana Sayfa</a></li>
+                    <li class="nav-item"><a class="nav-link" href="menu1.html" style="font-size:0.63rem;">1. Menü</a></li>
+                    <li class="nav-item"><a class="nav-link" href="menu2.html" style="font-size:0.63rem;">2. Menü</a></li>
+                    <li class="nav-item"><a class="nav-link" href="dashboard.html" style="font-size:0.63rem;">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="tasks.html" style="font-size:0.63rem;">Görevler</a></li>
+                    <li class="nav-item"><a class="nav-link" href="calendar.html" style="font-size:0.63rem;">Takvim</a></li>
+                    <li class="nav-item"><a class="nav-link" href="import-export.html" style="font-size:0.63rem;">İçe/Dışa Aktar</a></li>
+                    <li class="nav-item"><a class="nav-link" href="features.html" style="font-size:0.63rem;">Özellikler</a></li>
+                    <li class="nav-item"><a class="nav-link" href="help.html" style="font-size:0.63rem;">Yardım</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="profile.html" style="font-size:0.63rem;">Profil</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contact.html" style="font-size:0.63rem;">İletişim</a></li>
+                </ul>
+                <div class="user-dropdown dropdown">
+                    <button class="btn dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" style="font-size:0.63rem;">
+                        <i class="fas fa-user me-2" style="font-size:0.63rem;"></i>
+                        <span id="userName">Kullanıcı Adı</span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li>
+                            <div class="remaining-days" style="font-size:0.63rem;">
+                                <i class="fas fa-calendar-day me-2" style="font-size:0.63rem;"></i>
+                                Kalan Gün: <span id="remainingDays">30</span>
+                            </div>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="settings.html" style="font-size:0.63rem;"><i class="fas fa-cog me-2" style="font-size:0.63rem;"></i>Ayarlar</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="logout()" style="font-size:0.63rem;"><i class="fas fa-sign-out-alt me-2" style="font-size:0.63rem;"></i>Çıkış Yap</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Profile Content -->
+    <div class="profile-container">
+        <div class="profile-header">
+            <h1><i class="fas fa-user-circle me-2"></i>Profil</h1>
+            <p>Hesap bilgilerinizi görüntüleyin ve güncelleyin</p>
+        </div>
+
+        <!-- Profile Statistics -->
+        <!-- KALDIRILDI: Profil İstatistikleri ve kutuları -->
+
+        <!-- User Tasks Table -->
+        <!-- KALDIRILDI: Görevlerim tablosu ve başlığı -->
+
+        <!-- Profile Information -->
+        <div class="profile-card">
+            <div class="profile-card-header">
+                <h2><i class="fas fa-user-edit me-2"></i>Kişisel Bilgiler</h2>
+                <p>Hesap bilgilerinizi düzenleyin</p>
+            </div>
+            <div class="profile-card-body">
+                <div id="profileMessage"></div>
+                
+                <div class="profile-info">
+                    <div class="info-section">
+                        <h3><i class="fas fa-user"></i>Temel Bilgiler</h3>
+                        
+                        <div class="form-group">
+                            <label for="username" class="form-label">Kullanıcı Adı</label>
+                            <input type="text" class="form-control" id="username" value="">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email" class="form-label">E-posta</label>
+                            <input type="email" class="form-control" id="email" value="">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="phone" class="form-label">Telefon</label>
+                            <input type="tel" class="form-control" id="phone" value="">
+                        </div>
+                        
+                        <button class="btn btn-primary" onclick="updateProfile()">
+                            <i class="fas fa-save me-2"></i>Bilgileri Güncelle
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Delete Account Section -->
+        <div class="profile-card">
+            <div class="profile-card-header" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);">
+                <h4 style="font-size:1.2rem;"><i class="fas fa-trash me-2"></i>Hesabımı Sil</h4>
+                <p style="font-size:1rem;">Bu işlem geri alınamaz!</p>
+            </div>
+            <div class="profile-card-body">
+                <div class="alert alert-warning" style="font-size:0.95rem;">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    <strong>Dikkat:</strong> Hesabınızı silmek geri alınamaz bir işlemdir. Tüm verileriniz kalıcı olarak silinecektir.
+                </div>
+                
+                <button class="btn btn-danger" style="font-size:1rem; padding:8px 18px;" onclick="deleteAccount()">
+                    <i class="fas fa-trash me-2"></i>Hesabımı Sil
+                </button>
+            </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <!-- Son Aktiviteler bölümü tamamen kaldırıldı -->
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // API URL
+        const API_URL = 'https://localhost:7187/api';
+
+        // User authentication check and data loading
+        document.addEventListener('DOMContentLoaded', function() {
+            loadUserData();
+            loadProfileData();
+            loadActivityData();
+        });
+
+        // Load user data from localStorage or API
+        function loadUserData() {
+            const token = localStorage.getItem('token');
+            const userData = localStorage.getItem('userData');
+
+            if (token && userData) {
+                try {
+                    const user = JSON.parse(userData);
+                    document.getElementById('userName').textContent = user.username || 'Kullanıcı';
+                    document.getElementById('remainingDays').textContent = user.remainingDays || '0';
+                } catch (error) {
+                    console.error('User data parsing error:', error);
+                    redirectToLogin();
+                }
+            } else {
+                redirectToLogin();
+            }
+        }
+
+        // Load profile data
+        async function loadProfileData() {
+            const token = localStorage.getItem('token');
+            try {
+                // Load user profile
+                const profileResponse = await fetch(`${API_URL}/auth/me`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                let profile = {};
+                if (profileResponse.ok) {
+                    profile = await profileResponse.json();
+                    populateProfileForm(profile);
+                }
+                // Load tasks for statistics and table
+                const tasksResponse = await fetch(`${API_URL}/tasks`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                let tasks = [];
+                if (tasksResponse.ok) {
+                    tasks = await tasksResponse.json();
+                }
+                updateStatistics(tasks, profile);
+                // updateTasksTable(tasks); // KALDIRILDI
+            } catch (error) {
+                console.error('Profile data loading error:', error);
+                updateStatistics([], {});
+                // updateTasksTable([]); // KALDIRILDI
+            }
+        }
+        // İstatistikleri görevlerden hesapla
+        function updateStatistics(tasks, profile) {
+            // Profil istatistikleri kaldırıldı, bu fonksiyon artık boş.
+        }
+
+        // Populate profile form with user data
+        function populateProfileForm(profile) {
+            document.getElementById('username').value = profile.username || '';
+            document.getElementById('email').value = profile.email || '';
+            document.getElementById('phone').value = profile.phoneNumber || '';
+        }
+
+        // Update statistics with real data
+        function updateStatistics(tasks, profile) {
+            // Profil istatistikleri kaldırıldı, bu fonksiyon artık boş.
+        }
+
+        // Load activity data
+        async function loadActivityData() {
+            const activityList = document.getElementById('activityList');
+            if (!activityList) return;
+            
+            // Sample activity data
+            const activities = [
+                {
+                    type: 'success',
+                    title: 'Görev tamamlandı',
+                    description: '"Proje raporu hazırla" görevi tamamlandı',
+                    time: '2 saat önce'
+                },
+                {
+                    type: 'info',
+                    title: 'Profil güncellendi',
+                    description: 'Kişisel bilgiler güncellendi',
+                    time: '1 gün önce'
+                },
+                {
+                    type: 'warning',
+                    title: 'Şifre değiştirildi',
+                    description: 'Hesap şifresi güncellendi',
+                    time: '3 gün önce'
+                },
+                {
+                    type: 'success',
+                    title: 'Yeni görev oluşturuldu',
+                    description: '"Müşteri toplantısı" görevi eklendi',
+                    time: '1 hafta önce'
+                }
+            ];
+
+            activityList.innerHTML = activities.map(activity => `
+                <div class="activity-item">
+                    <div class="activity-icon ${activity.type}">
+                        <i class="fas fa-${getActivityIcon(activity.type)}"></i>
+                    </div>
+                    <div class="activity-content">
+                        <div class="activity-title">${activity.title}</div>
+                        <div class="activity-time">${activity.description} • ${activity.time}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Get activity icon based on type
+        function getActivityIcon(type) {
+            const icons = {
+                success: 'check-circle',
+                info: 'info-circle',
+                warning: 'exclamation-triangle',
+                error: 'times-circle'
+            };
+            return icons[type] || 'circle';
+        }
+
+        // Setup profile picture upload
+        // Removed profile picture upload setup
+
+        // Update profile picture display
+        // Removed profile picture update logic
+
+        // Upload profile picture to server
+        // Removed profile picture upload logic
+
+        // Update profile information
+        async function updateProfile() {
+            const token = localStorage.getItem('token');
+            const usernameInput = document.getElementById('username');
+            const emailInput = document.getElementById('email');
+            const phoneInput = document.getElementById('phone');
+            const profileData = {
+                username: usernameInput.value,
+                email: emailInput.value,
+                phoneNumber: phoneInput.value
+            };
+            try {
+                const response = await fetch(`${API_URL}/auth/profile`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(profileData)
+                });
+                let data = null;
+                try { data = await response.json(); } catch {}
+                console.log('Profil güncelleme yanıtı:', response.status, data);
+                if (response.ok) {
+                    showMessage((data && data.message) ? data.message : 'Profil bilgileri başarıyla güncellendi.', 'success');
+                    await loadProfileData(); // Bilgileri tekrar yükle
+                } else {
+                    showMessage((data && data.message) ? data.message : 'Profil güncellenirken hata oluştu.', 'danger');
+                    await loadProfileData();
+                }
+            } catch (error) {
+                console.error('Profile update error:', error);
+                showMessage('Profil güncellenirken beklenmeyen bir hata oluştu.', 'danger');
+                await loadProfileData();
+            }
+        }
+
+        // Update address information
+        async function updateAddress() {
+            const token = localStorage.getItem('token');
+            const addressData = {
+                address: document.getElementById('address').value,
+                city: document.getElementById('city').value,
+                country: document.getElementById('country').value
+            };
+            
+            try {
+                const response = await fetch(`${API_URL}/auth/update-address`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(addressData)
+                });
+
+                if (response.ok) {
+                    showMessage('Adres bilgileri başarıyla güncellendi.', 'success');
+                } else {
+                    showMessage('Adres güncellenirken hata oluştu.', 'danger');
+                }
+            } catch (error) {
+                console.error('Address update error:', error);
+                showMessage('Adres güncellenirken hata oluştu.', 'danger');
+            }
+        }
+
+        // Delete account function
+        async function deleteAccount() {
+            if (!confirm('Hesabınızı silmek istediğinizden emin misiniz? Bu işlem geri alınamaz!')) {
+                return;
+            }
+
+            const token = localStorage.getItem('token');
+            
+            try {
+                const response = await fetch(`${API_URL}/auth/delete-account`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (response.ok) {
+                    alert('Hesabınız başarıyla silindi.');
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('userData');
+                    window.location.href = 'login.html';
+                } else {
+                    const result = await response.json();
+                    showMessage(result.message || 'Hesap silinirken hata oluştu.', 'danger');
+                }
+            } catch (error) {
+                console.error('Delete account error:', error);
+                showMessage('Hesap silinirken hata oluştu.', 'danger');
+            }
+        }
+
+        // Show message
+        function showMessage(message, type) {
+            const messageDiv = document.getElementById('profileMessage');
+            messageDiv.innerHTML = `
+                <div class="alert alert-${type}">
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-triangle'} me-2"></i>
+                    ${message}
+                </div>
+            `;
+            
+            setTimeout(() => {
+                messageDiv.innerHTML = '';
+            }, 5000);
+        }
+
+        // Logout function
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('userData');
+            window.location.href = 'login.html';
+        }
+
+        // Redirect to login if not authenticated
+        function redirectToLogin() {
+            window.location.href = 'login.html';
+        }
+
+        // Active navigation highlighting
+        function setActiveNavItem() {
+            const currentPage = window.location.pathname.split('/').pop() || 'profile.html';
+            const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
+            
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === currentPage) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        // Initialize active navigation
+        setActiveNavItem();
+    </script>
+</body>
+</html> 

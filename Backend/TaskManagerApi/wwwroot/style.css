@@ -1,0 +1,286 @@
+/* Modern Auth/Card Tasarımı */
+body {
+    font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+    background: linear-gradient(135deg, #6366f1 0%, #f8fafc 100%);
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+}
+
+.auth-bg {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #6366f1 0%, #f8fafc 100%);
+}
+
+.auth-card {
+    background: #fff;
+    padding: 2.5rem 2rem 2rem 2rem;
+    border-radius: 18px;
+    box-shadow: 0 8px 32px rgba(99,102,241,0.10), 0 1.5px 8px rgba(0,0,0,0.04);
+    max-width: 370px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    animation: fadeIn 0.7s cubic-bezier(.4,0,.2,1);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.auth-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+.auth-header h2 {
+    margin: 0;
+    font-weight: 600;
+    color: #3730a3;
+    letter-spacing: 0.5px;
+}
+.auth-header i {
+    color: #6366f1;
+}
+
+.input-row {
+    display: flex;
+    align-items: center;
+    gap: 0.8em;
+    margin-bottom: 1.2rem;
+}
+.input-icon {
+    color: #6366f1;
+    font-size: 1.2em;
+    min-width: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.input-row input {
+    flex: 1 1 0;
+    padding: 12px 14px;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 7px;
+    font-size: 1rem;
+    background: #f1f5f9;
+    transition: border 0.2s, box-shadow 0.2s;
+    outline: none;
+    color: #22223b;
+}
+.input-row input:focus {
+    border: 1.5px solid #6366f1;
+    background: #eef2ff;
+    box-shadow: 0 0 0 2px #6366f133;
+}
+.input-row input.error {
+    border-color: #ef4444;
+    background: #fef2f2;
+}
+.input-row input::placeholder {
+    color: #a5b4fc;
+    opacity: 1;
+    font-size: 1rem;
+    letter-spacing: 0.01em;
+}
+
+.btn-primary {
+    background: linear-gradient(90deg, #6366f1 60%, #818cf8 100%);
+    color: #fff;
+    border: none;
+    padding: 12px 0;
+    border-radius: 7px;
+    font-size: 1.08rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(99,102,241,0.08);
+    transition: background 0.2s, box-shadow 0.2s;
+    margin-top: 0.5rem;
+}
+.btn-primary:hover {
+    background: linear-gradient(90deg, #4f46e5 60%, #6366f1 100%);
+    box-shadow: 0 4px 16px rgba(99,102,241,0.13);
+}
+.w-100 { width: 100%; }
+
+.form-message {
+    min-height: 24px;
+    margin-top: 0.5rem;
+    font-size: 0.98rem;
+    text-align: center;
+    color: #ef4444;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+.form-message.success {
+    color: #22c55e;
+}
+.form-message.info {
+    color: #2563eb;
+}
+
+.auth-switch {
+    text-align: center;
+    margin-top: 1.2rem;
+    font-size: 0.97rem;
+    color: #64748b;
+}
+.auth-switch a {
+    color: #6366f1;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s;
+}
+.auth-switch a:hover {
+    color: #3730a3;
+    text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 500px) {
+    .auth-card {
+        padding: 1.2rem 0.5rem 1.5rem 0.5rem;
+        border-radius: 0;
+        max-width: 100vw;
+        min-height: 100vh;
+        box-shadow: none;
+    }
+    .auth-bg {
+        padding: 0;
+    }
+    .input-row input {
+        font-size: 1rem;
+        padding: 12px 10px;
+    }
+    .input-icon {
+        font-size: 1em;
+        min-width: 28px;
+    }
+}
+
+/* Önceki stiller (görev yönetimi vs.) aşağıda korunuyor */
+#main-container {
+    max-width: 400px;
+    margin: 60px auto;
+    background: #fff;
+    padding: 32px 24px 24px 24px;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+}
+
+.section {
+    display: block;
+}
+
+input[type="text"], input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0 16px 0;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 1rem;
+    background: #f1f5f9;
+    transition: border 0.2s;
+}
+
+input[type="text"]:focus, input[type="password"]:focus {
+    border: 1.5px solid #6366f1;
+    outline: none;
+}
+
+button {
+    background: #6366f1;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+button:hover {
+    background: #4f46e5;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+#tasks-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 24px;
+}
+
+#tasks-list li {
+    background: #f1f5f9;
+    margin-bottom: 10px;
+    padding: 12px 10px;
+    border-radius: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: box-shadow 0.2s;
+}
+
+#tasks-list li.completed {
+    text-decoration: line-through;
+    color: #94a3b8;
+    background: #e0e7ff;
+}
+
+.task-actions button {
+    background: #f87171;
+    color: #fff;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    margin-left: 8px;
+}
+
+.task-actions button.edit {
+    background: #38bdf8;
+}
+
+.message {
+    margin-top: 10px;
+    color: #ef4444;
+    font-size: 0.95rem;
+    min-height: 20px;
+}
+
+@media (max-width: 500px) {
+    #main-container {
+        padding: 16px 4px;
+        border-radius: 0;
+        margin: 0;
+        min-height: 100vh;
+    }
+} 
+
+/* Tüm modal footer butonları için ortak stil */
+.modal-footer .btn {
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  font-family: 'Inter', 'Segoe UI', Arial, sans-serif !important;
+  min-width: 110px;
+  padding: 0.5rem 1.5rem;
+  font-size: 1rem;
+  box-shadow: 0 2px 8px #6366f133;
+  transition: box-shadow 0.2s, background 0.2s;
+}
+.modal-footer .btn:focus, .modal-footer .btn:hover {
+  box-shadow: 0 4px 16px #6366f155;
+  outline: none;
+} 

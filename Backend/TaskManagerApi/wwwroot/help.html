@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yardım ve Dokümantasyon - Task Manager</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary-color: #818cf8;
+            --text-dark: #1e293b;
+            --text-light: #64748b;
+            --bg-light: #f8fafc;
+            --border-color: #e2e8f0;
+            --success-color: #22c55e;
+            --error-color: #ef4444;
+            --warning-color: #f59e0b;
+            --info-color: #3b82f6;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+            color: var(--text-dark);
+            background-color: var(--bg-light);
+        }
+
+        /* Navigation Styles */
+        .navbar {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            box-shadow: 0 2px 10px rgba(99, 102, 241, 0.1);
+            padding: 1rem 0;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: white !important;
+        }
+
+        .navbar-nav .nav-link {
+            color: rgba(255, 255, 255, 0.9) !important;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            margin: 0 0.25rem;
+        }
+
+        .navbar-nav .nav-link:hover,
+        .navbar-nav .nav-link.active {
+            color: white !important;
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: translateY(-1px);
+        }
+
+        /* User Dropdown Styles */
+        .user-dropdown .dropdown-toggle {
+            color: white !important;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .user-dropdown .dropdown-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .user-dropdown .dropdown-menu {
+            border: none;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            padding: 0.5rem;
+            min-width: 200px;
+        }
+
+        .user-dropdown .dropdown-item {
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .user-dropdown .dropdown-item:hover {
+            background-color: var(--bg-light);
+            transform: translateX(2px);
+        }
+
+        .remaining-days {
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        /* Help Page Styles */
+        .help-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .help-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .help-header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+        }
+
+        .help-header p {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .help-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .help-card-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .help-card-header h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .help-card-header p {
+            opacity: 0.9;
+            margin: 0;
+        }
+
+        .help-card-body {
+            padding: 2rem;
+        }
+
+        /* Search Section */
+        .search-section {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            margin-bottom: 2rem;
+        }
+
+        .search-input {
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            font-size: 1.1rem;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+            outline: none;
+        }
+
+        /* FAQ Styles */
+        .faq-item {
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .faq-item:hover {
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .faq-question {
+            background: var(--bg-light);
+            padding: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: var(--text-dark);
+            transition: all 0.3s ease;
+        }
+
+        .faq-question:hover {
+            background: white;
+        }
+
+        .faq-question.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .faq-answer {
+            padding: 0 1.5rem;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .faq-answer.active {
+            padding: 1.5rem;
+            max-height: 500px;
+        }
+
+        .faq-toggle {
+            transition: transform 0.3s ease;
+        }
+
+        .faq-toggle.active {
+            transform: rotate(180deg);
+        }
+
+        /* Tutorial Styles */
+        .tutorial-step {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: var(--bg-light);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .tutorial-step:hover {
+            background: white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            margin-right: 1rem;
+            flex-shrink: 0;
+        }
+
+        .step-content h4 {
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .step-content p {
+            color: var(--text-light);
+            line-height: 1.6;
+            margin-bottom: 0;
+        }
+
+        /* Contact Support */
+        .support-section {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            color: white;
+            margin-bottom: 2rem;
+        }
+
+        .support-section h3 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .support-section p {
+            opacity: 0.9;
+            margin-bottom: 1.5rem;
+        }
+
+        .btn-light {
+            background: white;
+            color: var(--primary-color);
+            border: none;
+            border-radius: 8px;
+            padding: 0.75rem 2rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-light:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
+        }
+
+        /* Quick Links */
+        .quick-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .quick-link-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: var(--text-dark);
+        }
+
+        .quick-link-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+            color: var(--primary-color);
+        }
+
+        .quick-link-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            margin: 0 auto 1rem;
+        }
+
+        .quick-link-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .quick-link-desc {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .help-container {
+                margin: 1rem auto;
+            }
+
+            .help-header h1 {
+                font-size: 2rem;
+            }
+
+            .help-card-header {
+                padding: 1.5rem;
+            }
+
+            .help-card-header h2 {
+                font-size: 1.5rem;
+            }
+
+            .help-card-body {
+                padding: 1.5rem;
+            }
+
+            .navbar-nav {
+                text-align: center;
+                margin-top: 1rem;
+            }
+
+            .user-dropdown {
+                margin-top: 1rem;
+            }
+
+            .tutorial-step {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .step-number {
+                margin-right: 0;
+                margin-bottom: 1rem;
+            }
+
+            .quick-links {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="home.html" style="font-size:0.87rem;">
+                <i class="fas fa-tasks me-2" style="font-size:0.87rem;"></i>Task Manager
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item"><a class="nav-link" href="home.html" style="font-size:0.63rem;">Ana Sayfa</a></li>
+                    <li class="nav-item"><a class="nav-link" href="menu1.html" style="font-size:0.63rem;">1. Menü</a></li>
+                    <li class="nav-item"><a class="nav-link" href="menu2.html" style="font-size:0.63rem;">2. Menü</a></li>
+                    <li class="nav-item"><a class="nav-link" href="dashboard.html" style="font-size:0.63rem;">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="tasks.html" style="font-size:0.63rem;">Görevler</a></li>
+                    <li class="nav-item"><a class="nav-link" href="calendar.html" style="font-size:0.63rem;">Takvim</a></li>
+                    <li class="nav-item"><a class="nav-link" href="import-export.html" style="font-size:0.63rem;">İçe/Dışa Aktar</a></li>
+                    <li class="nav-item"><a class="nav-link" href="features.html" style="font-size:0.63rem;">Özellikler</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="help.html" style="font-size:0.63rem;">Yardım</a></li>
+                    <li class="nav-item"><a class="nav-link" href="profile.html" style="font-size:0.63rem;">Profil</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contact.html" style="font-size:0.63rem;">İletişim</a></li>
+                </ul>
+                <div class="user-dropdown dropdown">
+                    <button class="btn dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" style="font-size:0.63rem;">
+                        <i class="fas fa-user me-2" style="font-size:0.63rem;"></i>
+                        <span id="userName">Kullanıcı Adı</span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li>
+                            <div class="remaining-days" style="font-size:0.63rem;">
+                                <i class="fas fa-calendar-day me-2" style="font-size:0.63rem;"></i>
+                                Kalan Gün: <span id="remainingDays">30</span>
+                            </div>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="settings.html" style="font-size:0.63rem;"><i class="fas fa-cog me-2" style="font-size:0.63rem;"></i>Ayarlar</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="logout()" style="font-size:0.63rem;"><i class="fas fa-sign-out-alt me-2" style="font-size:0.63rem;"></i>Çıkış Yap</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Help Content -->
+    <div class="help-container">
+        <div class="help-header">
+            <h1><i class="fas fa-question-circle me-2"></i>Yardım ve Dokümantasyon</h1>
+            <p>Task Manager'ı nasıl kullanacağınızı öğrenin ve sorularınızın cevaplarını bulun</p>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="quick-links">
+            <a href="#getting-started" class="quick-link-card">
+                <div class="quick-link-icon">
+                    <i class="fas fa-rocket"></i>
+                </div>
+                <div class="quick-link-title">Başlangıç Rehberi</div>
+                <div class="quick-link-desc">İlk adımlar ve temel kullanım</div>
+            </a>
+            <a href="#faq" class="quick-link-card">
+                <div class="quick-link-icon">
+                    <i class="fas fa-question"></i>
+                </div>
+                <div class="quick-link-title">Sık Sorulan Sorular</div>
+                <div class="quick-link-desc">Yaygın sorular ve cevapları</div>
+            </a>
+            <a href="#tutorials" class="quick-link-card">
+                <div class="quick-link-icon">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <div class="quick-link-title">Eğitimler</div>
+                <div class="quick-link-desc">Adım adım öğreticiler</div>
+            </a>
+            <a href="#contact" class="quick-link-card">
+                <div class="quick-link-icon">
+                    <i class="fas fa-headset"></i>
+                </div>
+                <div class="quick-link-title">Destek</div>
+                <div class="quick-link-desc">Teknik destek ve iletişim</div>
+            </a>
+        </div>
+
+        <!-- Getting Started -->
+        <div class="help-card" id="getting-started">
+            <div class="help-card-header">
+                <h2><i class="fas fa-rocket me-2"></i>Başlangıç Rehberi</h2>
+                <p>Task Manager'ı kullanmaya başlamak için temel adımlar</p>
+            </div>
+            <div class="help-card-body">
+                <div class="tutorial-step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h4>Hesap Oluşturun</h4>
+                        <p>Ana sayfada "Kayıt Ol" butonuna tıklayarak yeni bir hesap oluşturun. Kullanıcı adı, e-posta ve şifre bilgilerinizi girin.</p>
+                    </div>
+                </div>
+
+                <div class="tutorial-step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h4>Giriş Yapın</h4>
+                        <p>Hesabınızı oluşturduktan sonra kullanıcı adı ve şifrenizle giriş yapın. Ana sayfaya yönlendirileceksiniz.</p>
+                    </div>
+                </div>
+
+                <div class="tutorial-step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h4>İlk Görevinizi Oluşturun</h4>
+                        <p>"Görevler" sayfasına gidin ve "Yeni Görev" butonuna tıklayın. Görev başlığı ve açıklamasını girin.</p>
+                    </div>
+                </div>
+
+                <div class="tutorial-step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h4>Dashboard'ı Keşfedin</h4>
+                        <p>Dashboard sayfasında görev istatistiklerinizi ve performansınızı takip edin.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FAQ Section -->
+        <div class="help-card" id="faq">
+            <div class="help-card-header">
+                <h2><i class="fas fa-question me-2"></i>Sık Sorulan Sorular</h2>
+                <p>En yaygın sorular ve detaylı cevapları</p>
+            </div>
+            <div class="help-card-body">
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        <span>Şifremi nasıl değiştirebilirim?</span>
+                        <i class="fas fa-chevron-down faq-toggle"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Ayarlar sayfasına gidin ve "Şifre Değiştir" bölümünü kullanın. Mevcut şifrenizi ve yeni şifrenizi girin. Şifreniz en az 6 karakter olmalıdır.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        <span>Görevleri nasıl düzenleyebilirim?</span>
+                        <i class="fas fa-chevron-down faq-toggle"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Görevler sayfasında, düzenlemek istediğiniz görevin yanındaki "Düzenle" butonuna tıklayın. Başlık ve açıklamayı güncelleyebilirsiniz.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        <span>Kalan gün sistemi nedir?</span>
+                        <i class="fas fa-chevron-down faq-toggle"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Kalan gün sistemi, hesabınızın aktif kalacağı gün sayısını gösterir. Bu süre dolduğunda bazı özelliklere erişiminiz kısıtlanabilir. Admin panelinden güncellenebilir.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        <span>Hesabımı nasıl silebilirim?</span>
+                        <i class="fas fa-chevron-down faq-toggle"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Hesap silme işlemi için lütfen destek ekibimizle iletişime geçin. Güvenlik nedeniyle bu işlem manuel olarak yapılmaktadır.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        <span>Verilerim güvende mi?</span>
+                        <i class="fas fa-chevron-down faq-toggle"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Evet, tüm verileriniz şifrelenmiş olarak saklanır ve güvenli bağlantılar kullanılır. JWT token tabanlı kimlik doğrulama sistemi ile korunmaktadır.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tutorials Section -->
+        <div class="help-card" id="tutorials">
+            <div class="help-card-header">
+                <h2><i class="fas fa-graduation-cap me-2"></i>Eğitimler</h2>
+                <p>Detaylı öğreticiler ve kullanım kılavuzları</p>
+            </div>
+            <div class="help-card-body">
+                <div class="tutorial-step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h4>Görev Yönetimi</h4>
+                        <p>Görev oluşturma, düzenleme, tamamlama ve silme işlemlerini öğrenin. Görevlerinizi kategorilere ayırın ve öncelik belirleyin.</p>
+                    </div>
+                </div>
+
+                <div class="tutorial-step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h4>Dashboard Kullanımı</h4>
+                        <p>Dashboard sayfasında istatistiklerinizi görüntüleyin, performans grafiklerini inceleyin ve hızlı işlemler yapın.</p>
+                    </div>
+                </div>
+
+                <div class="tutorial-step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h4>Hesap Yönetimi</h4>
+                        <p>Profil bilgilerinizi güncelleyin, şifrenizi değiştirin ve hesap güvenlik ayarlarınızı yapılandırın.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Support -->
+        <div class="support-section" id="contact">
+            <h3><i class="fas fa-headset me-2"></i>Daha Fazla Yardıma mı İhtiyacınız Var?</h3>
+            <p>Teknik destek ekibimiz size yardımcı olmaktan memnuniyet duyar</p>
+            <a href="contact.html" class="btn btn-light">
+                <i class="fas fa-envelope me-2"></i>Destek Ekibiyle İletişime Geçin
+            </a>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // User authentication check and data loading
+        document.addEventListener('DOMContentLoaded', function() {
+            loadUserData();
+            setupSearch();
+            setupSmoothScrolling();
+        });
+
+        // Load user data from localStorage or API
+        function loadUserData() {
+            const token = localStorage.getItem('token');
+            const userData = localStorage.getItem('userData');
+
+            if (token && userData) {
+                try {
+                    const user = JSON.parse(userData);
+                    document.getElementById('userName').textContent = user.username || 'Kullanıcı';
+                    document.getElementById('remainingDays').textContent = user.remainingDays || '0';
+                } catch (error) {
+                    console.error('User data parsing error:', error);
+                    redirectToLogin();
+                }
+            } else {
+                redirectToLogin();
+            }
+        }
+
+        // Setup search functionality
+        function setupSearch() {
+            const searchInput = document.getElementById('searchInput');
+            
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                const faqItems = document.querySelectorAll('.faq-item');
+                
+                faqItems.forEach(item => {
+                    const question = item.querySelector('.faq-question span').textContent.toLowerCase();
+                    const answer = item.querySelector('.faq-answer p').textContent.toLowerCase();
+                    
+                    if (question.includes(searchTerm) || answer.includes(searchTerm)) {
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+        }
+
+        // Toggle FAQ items
+        function toggleFAQ(element) {
+            const answer = element.nextElementSibling;
+            const toggle = element.querySelector('.faq-toggle');
+            
+            // Close other open FAQs
+            document.querySelectorAll('.faq-question.active').forEach(active => {
+                if (active !== element) {
+                    active.classList.remove('active');
+                    active.nextElementSibling.classList.remove('active');
+                    active.querySelector('.faq-toggle').classList.remove('active');
+                }
+            });
+            
+            // Toggle current FAQ
+            element.classList.toggle('active');
+            answer.classList.toggle('active');
+            toggle.classList.toggle('active');
+        }
+
+        // Setup smooth scrolling for anchor links
+        function setupSmoothScrolling() {
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+        }
+
+        // Logout function
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('userData');
+            window.location.href = 'login.html';
+        }
+
+        // Redirect to login if not authenticated
+        function redirectToLogin() {
+            window.location.href = 'login.html';
+        }
+
+        // Active navigation highlighting
+        function setActiveNavItem() {
+            const currentPage = window.location.pathname.split('/').pop() || 'help.html';
+            const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
+            
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === currentPage) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        // Initialize active navigation
+        setActiveNavItem();
+    </script>
+</body>
+</html> 

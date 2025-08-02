@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Paneli - Task Manager</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <style>
+        body {
+            background: linear-gradient(135deg, #6366f1 0%, #f8fafc 100%);
+            min-height: 100vh;
+            font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+        }
+        .admin-panel-container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 8px 32px rgba(99,102,241,0.10), 0 1.5px 8px rgba(0,0,0,0.04);
+            padding: 2.5rem 2rem;
+        }
+        .nav-tabs .nav-link.active {
+            background: linear-gradient(90deg, #6366f1 60%, #818cf8 100%);
+            color: #fff !important;
+            font-weight: 600;
+        }
+        .nav-tabs .nav-link {
+            color: #6366f1;
+            font-weight: 500;
+        }
+        .tab-content {
+            margin-top: 2rem;
+        }
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .section-header h4 {
+            margin: 0;
+        }
+        .table-responsive {
+            margin-bottom: 2rem;
+        }
+        @media (max-width: 900px) {
+            .admin-panel-container {
+                padding: 1rem 0.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <!--
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="home.html">
+                <i class="fas fa-tasks me-2"></i>Task Manager
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item"><a class="nav-link" href="home.html">Ana Sayfa</a></li>
+                    <li class="nav-item"><a class="nav-link" href="menu1.html">1. Menü</a></li>
+                    <li class="nav-item"><a class="nav-link" href="menu2.html">2. Menü</a></li>
+                    <li class="nav-item"><a class="nav-link" href="dashboard.html">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="tasks.html">Görevler</a></li>
+                    <li class="nav-item"><a class="nav-link" href="calendar.html">Takvim</a></li>
+                    <li class="nav-item"><a class="nav-link" href="import-export.html">İçe/Dışa Aktar</a></li>
+                    <li class="nav-item"><a class="nav-link" href="features.html">Özellikler</a></li>
+                    <li class="nav-item"><a class="nav-link" href="help.html">Yardım</a></li>
+                    <li class="nav-item"><a class="nav-link" href="profile.html">Profil</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contact.html">İletişim</a></li>
+                </ul>
+                <div class="user-dropdown dropdown">
+                    <button class="btn dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown">
+                        <i class="fas fa-user me-2"></i>
+                        <span id="userName">Kullanıcı Adı</span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li>
+                            <div class="remaining-days">
+                                <i class="fas fa-calendar-day me-2"></i>
+                                Kalan Gün: <span id="remainingDays">30</span>
+                            </div>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="settings.html"><i class="fas fa-cog me-2"></i>Ayarlar</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="logout()"><i class="fas fa-sign-out-alt me-2"></i>Çıkış Yap</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+    -->
+    <div class="admin-panel-container">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+            <div class="d-flex align-items-center gap-3">
+                <i class="fa-solid fa-user-shield fa-2x text-primary"></i>
+                <h2 class="mb-0" style="color:#3730a3;">Admin Paneli</h2>
+            </div>
+            <a href="index.html" class="btn btn-outline-primary"><i class="fa fa-arrow-left"></i> Kullanıcı Paneline Dön</a>
+        </div>
+        <ul class="nav nav-tabs" id="adminTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="users-tab" data-bs-toggle="tab" data-bs-target="#usersTab" type="button" role="tab"><i class="fa fa-users me-1"></i> Kullanıcılar</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tasks-tab" data-bs-toggle="tab" data-bs-target="#tasksTab" type="button" role="tab"><i class="fa fa-list-check me-1"></i> Görevler</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="products-tab" data-bs-toggle="tab" data-bs-target="#productsTab" type="button" role="tab"><i class="fa fa-box me-1"></i> Ürünler</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="orders-tab" data-bs-toggle="tab" data-bs-target="#ordersTab" type="button" role="tab"><i class="fa fa-shopping-cart me-1"></i> Siparişler</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="buttons-tab" data-bs-toggle="tab" data-bs-target="#buttonsTab" type="button" role="tab"><i class="fa fa-circle me-1"></i> Butonlar</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="laptops-tab" data-bs-toggle="tab" data-bs-target="#laptopsTab" type="button" role="tab"><i class="fa fa-laptop me-1"></i> Laptoplar</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tablets-tab" data-bs-toggle="tab" data-bs-target="#tabletsTab" type="button" role="tab"><i class="fa fa-tablet-screen-button me-1"></i> Tabletler</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="cars-tab" data-bs-toggle="tab" data-bs-target="#carsTab" type="button" role="tab"><i class="fa fa-car me-1"></i> Araçlar</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="phones-tab" data-bs-toggle="tab" data-bs-target="#phonesTab" type="button" role="tab"><i class="fa fa-mobile-screen-button me-1"></i> Telefonlar</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="shoppings-tab" data-bs-toggle="tab" data-bs-target="#shoppingsTab" type="button" role="tab"><i class="fa fa-bag-shopping me-1"></i> Alışveriş</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="contacts-tab" data-bs-toggle="tab" data-bs-target="#contactsTab" type="button" role="tab"><i class="fa fa-envelope me-1"></i> İletişim Mesajları</button>
+            </li>
+        </ul>
+        <div class="tab-content" id="adminTabsContent">
+            <div class="tab-pane fade show active" id="usersTab" role="tabpanel">
+                <!-- Kullanıcılar Bölümü -->
+                <div class="section-header">
+                    <i class="fa fa-users text-primary"></i>
+                    <h4>Kullanıcılar</h4>
+                    <button id="addUserBtn" class="btn btn-sm btn-success ms-auto"><i class="fa fa-plus"></i> Ekle</button>
+                </div>
+                <div id="users-message" class="form-message mb-2"></div>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle" id="users-table">
+                        <thead class="table-light">
+                            <tr>
+                                <th>ID</th>
+                                <th>Kullanıcı Adı</th>
+                                <th>E-posta</th>
+                                <th>Telefon</th>
+                                <th>Rol</th>
+                                <th>Görev Sayısı</th>
+                                <th>Kalan Gün</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="tasksTab" role="tabpanel">
+                <!-- Görevler Bölümü -->
+                <div class="section-header">
+                    <i class="fa fa-list-check text-primary"></i>
+                    <h4>Görevler</h4>
+                    <button id="addTaskBtn" class="btn btn-sm btn-success ms-auto"><i class="fa fa-plus"></i> Ekle</button>
+                </div>
+                <div id="tasks-message" class="form-message mb-2"></div>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle" id="tasks-table">
+                        <thead class="table-light">
+                            <tr>
+                                <th>ID</th>
+                                <th>Başlık</th>
+                                <th>Açıklama</th>
+                                <th>Tamamlandı</th>
+                                <th>Öncelik</th>
+                                <th>Bitiş Tarihi</th>
+                                <th>Kullanıcı</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="productsTab" role="tabpanel">
+                <div class="section-header">
+                    <i class="fa fa-box text-primary"></i>
+                    <h4>Ürünler</h4>
+                    <button id="addProductBtn" class="btn btn-sm btn-success ms-auto"><i class="fa fa-plus"></i> Ekle</button>
+                </div>
+                <div id="products-message" class="form-message mb-2"></div>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle" id="products-table">
+                        <thead class="table-light">
+                            <tr>
+                                <th>ID</th>
+                                <th>Ad</th>
+                                <th>Kategori</th>
+                                <th>Stok</th>
+                                <th>Oluşturulma</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="ordersTab" role="tabpanel">
+                <div class="section-header">
+                    <i class="fa fa-shopping-cart text-primary"></i>
+                    <h4>Siparişler</h4>
+                    <button id="addOrderBtn" class="btn btn-sm btn-success ms-auto"><i class="fa fa-plus"></i> Ekle</button>
+                </div>
+                <div id="orders-message" class="form-message mb-2"></div>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle" id="orders-table">
+                        <thead class="table-light">
+                            <tr>
+                                <th>ID</th>
+                                <th>Sipariş No</th>
+                                <th>Kullanıcı</th>
+                                <th>Tutar</th>
+                                <th>Oluşturulma</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="buttonsTab" role="tabpanel">
+                <div class="section-header">
+                    <i class="fa fa-circle text-primary"></i>
+                    <h4>Butonlar</h4>
+                    <button id="addButtonBtn" class="btn btn-sm btn-success ms-auto"><i class="fa fa-plus"></i> Ekle</button>
+                </div>
+                <div id="buttons-message" class="form-message mb-2"></div>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle" id="buttons-table">
+                        <thead class="table-light">
+                            <tr>
+                                <th>ID</th>
+                                <th>Tarih/Saat</th>
+                                <th>Adı</th>
+                                <th>Tip</th>
+                                <th>Renk</th>
+                                <th>Fiyat</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="laptopsTab" role="tabpanel">
+                <div class="section-header">
+                    <i class="fa fa-laptop text-primary"></i>
+                    <h4>Laptoplar</h4>
+                    <button id="addLaptopBtn" class="btn btn-sm btn-success ms-auto"><i class="fa fa-plus"></i> Ekle</button>
+                </div>
+                <div id="laptops-message" class="form-message mb-2"></div>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle" id="laptops-table">
+                        <thead class="table-light">
+                            <tr>
+                                <th>ID</th>
+                                <th>Tarih/Saat</th>
+                                <th>Adı</th>
+                                <th>Model</th>
+                                <th>Renk</th>
+                                <th>İşlemci</th>
+                                <th>Fiyat</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="tabletsTab" role="tabpanel">
+                <div class="section-header">
+                    <i class="fa fa-tablet-screen-button text-primary"></i>
+                    <h4>Tabletler</h4>
+                    <button id="addTabletBtn" class="btn btn-sm btn-success ms-auto"><i class="fa fa-plus"></i> Ekle</button>
+                </div>
+                <div id="tablets-message" class="form-message mb-2"></div>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle" id="tablets-table">
+                        <thead class="table-light">
+                            <tr>
+                                <th>ID</th>
+                                <th>Tarih/Saat</th>
+                                <th>Adı</th>
+                                <th>Model</th>
+                                <th>Renk</th>
+                                <th>Ekran</th>
+                                <th>Fiyat</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="carsTab" role="tabpanel">
+                <div class="section-header">
+                    <i class="fa fa-car text-primary"></i>
+                    <h4>Araçlar</h4>
+                    <button id="addCarBtn" class="btn btn-sm btn-success ms-auto"><i class="fa fa-plus"></i> Ekle</button>
+                </div>
+                <div id="cars-message" class="form-message mb-2"></div>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle" id="cars-table">
+                        <thead class="table-light">
+                            <tr>
+                                <th>ID</th>
+                                <th>Tarih/Saat</th>
+                                <th>Adı</th>
+                                <th>Model</th>
+                                <th>Renk</th>
+                                <th>Yıl</th>
+                                <th>Fiyat</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="phonesTab" role="tabpanel">
+                <div class="section-header">
+                    <i class="fa fa-mobile-screen-button text-primary"></i>
+                    <h4>Telefonlar</h4>
+                    <button id="addPhoneBtn" class="btn btn-sm btn-success ms-auto"><i class="fa fa-plus"></i> Ekle</button>
+                </div>
+                <div id="phones-message" class="form-message mb-2"></div>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle" id="phones-table">
+                        <thead class="table-light">
+                            <tr>
+                                <th>ID</th>
+                                <th>Tarih/Saat</th>
+                                <th>Adı</th>
+                                <th>Model</th>
+                                <th>Renk</th>
+                                <th>Depolama</th>
+                                <th>Fiyat</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="shoppingsTab" role="tabpanel">
+                <div class="section-header">
+                    <i class="fa fa-bag-shopping text-primary"></i>
+                    <h4>Alışveriş</h4>
+                    <button id="addShoppingBtn" class="btn btn-sm btn-success ms-auto"><i class="fa fa-plus"></i> Ekle</button>
+                </div>
+                <div id="shoppings-message" class="form-message mb-2"></div>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle" id="shoppings-table">
+                        <thead class="table-light">
+                            <tr>
+                                <th>ID</th>
+                                <th>Tarih/Saat</th>
+                                <th>Adı</th>
+                                <th>Kategori</th>
+                                <th>Durum</th>
+                                <th>Fiyat</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="contactsTab" role="tabpanel">
+                <div class="section-header">
+                    <i class="fa fa-envelope text-primary"></i>
+                    <h4>İletişim Mesajları</h4>
+                </div>
+                <div id="contacts-message" class="form-message mb-2"></div>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle" id="contacts-table">
+                        <thead class="table-light">
+                            <tr>
+                                <th>ID</th>
+                                <th>İsim</th>
+                                <th>E-posta</th>
+                                <th>Telefon</th>
+                                <th>Konu</th>
+                                <th>Mesaj</th>
+                                <th>Tarih</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal containers for dynamic modals -->
+    <div id="productModalContainer"></div>
+    <div id="orderModalContainer"></div>
+    <!-- BUTTON Modal -->
+    <div class="modal fade" id="buttonModal" tabindex="-1" aria-labelledby="buttonModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="buttonModalLabel">Buton Ekle/Düzenle</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
+          </div>
+          <div class="modal-body">
+            <form id="buttonForm">
+              <input type="hidden" id="button-id">
+              <div class="mb-2">
+                <label class="form-label">Tarih/Saat</label>
+                <input type="datetime-local" class="form-control" id="button-date" required>
+              </div>
+              <div class="mb-2">
+                <label class="form-label">Adı</label>
+                <input type="text" class="form-control" id="button-name" required>
+              </div>
+              <div class="mb-2">
+                <label class="form-label">Tip</label>
+                <input type="text" class="form-control" id="button-type" required>
+              </div>
+              <div class="mb-2">
+                <label class="form-label">Renk</label>
+                <input type="text" class="form-control" id="button-color" required>
+              </div>
+              <div class="mb-2">
+                <label class="form-label">Fiyat</label>
+                <input type="number" step="0.01" class="form-control" id="button-price" required>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Kapat</button>
+            <button type="button" class="btn btn-success me-2" id="buttonSaveBtn">Düzenle</button>
+            <button type="button" class="btn btn-danger" id="buttonDeleteBtn" style="display:none">Sil</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- LAPTOP Modal -->
+    <div class="modal fade" id="laptopModal" tabindex="-1" aria-labelledby="laptopModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="laptopModalLabel">Laptop Ekle/Düzenle</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
+          </div>
+          <div class="modal-body">
+            <form id="laptopForm">
+              <input type="hidden" id="laptop-id">
+              <div class="mb-2">
+                <label class="form-label">Tarih/Saat</label>
+                <input type="datetime-local" class="form-control" id="laptop-date" required>
+              </div>
+              <div class="mb-2">
+                <label class="form-label">Adı</label>
+                <input type="text" class="form-control" id="laptop-name" required>
+              </div>
+              <div class="mb-2">
+                <label class="form-label">Model</label>
+                <input type="text" class="form-control" id="laptop-model" required>
+              </div>
+              <div class="mb-2">
+                <label class="form-label">Renk</label>
+                <input type="text" class="form-control" id="laptop-color" required>
+              </div>
+              <div class="mb-2">
+                <label class="form-label">İşlemci</label>
+                <input type="text" class="form-control" id="laptop-cpu" required>
+              </div>
+              <div class="mb-2">
+                <label class="form-label">Fiyat</label>
+                <input type="number" step="0.01" class="form-control" id="laptop-price" required>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Kapat</button>
+            <button type="button" class="btn btn-success me-2" id="laptopSaveBtn">Düzenle</button>
+            <button type="button" class="btn btn-danger" id="laptopDeleteBtn" style="display:none">Sil</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- TABLET Modal -->
+    <div class="modal fade" id="tabletModal" tabindex="-1" aria-labelledby="tabletModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="tabletModalLabel">Tablet Ekle/Düzenle</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
+          </div>
+          <div class="modal-body">
+            <form id="tabletForm">
+              <input type="hidden" id="tablet-id">
+              <div class="mb-2">
+                <label class="form-label">Tarih/Saat</label>
+                <input type="datetime-local" class="form-control" id="tablet-date" required>
+              </div>
+              <div class="mb-2">
+                <label class="form-label">Adı</label>
+                <input type="text" class="form-control" id="tablet-name" required>
+              </div>
+              <div class="mb-2">
+                <label class="form-label">Model</label>
+                <input type="text" class="form-control" id="tablet-model" required>
+              </div>
+              <div class="mb-2">
+                <label class="form-label">Renk</label>
+                <input type="text" class="form-control" id="tablet-color" required>
+              </div>
+              <div class="mb-2">
+                <label class="form-label">Ekran</label>
+                <input type="text" class="form-control" id="tablet-screen" required>
+              </div>
+              <div class="mb-2">
+                <label class="form-label">Fiyat</label>
+                <input type="number" step="0.01" class="form-control" id="tablet-price" required>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Kapat</button>
+            <button type="button" class="btn btn-success me-2" id="tabletSaveBtn">Düzenle</button>
+            <button type="button" class="btn btn-danger" id="tabletDeleteBtn" style="display:none">Sil</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- CAR Modal -->
+    <div class="modal fade" id="carModal" tabindex="-1" aria-labelledby="carModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="carModalLabel">Araç Ekle/Düzenle</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
+          </div>
+          <div class="modal-body">
+            <form id="carForm">
+              <input type="hidden" id="car-id">
+              <div class="mb-2">
+                <label class="form-label">Tarih/Saat</label>
+                <input type="datetime-local" class="form-control" id="car-date" required>
+              </div>
+              <div class="mb-2">
+                <label class="form-label">Adı</label>
+                <input type="text" class="form-control" id="car-name" required>
+              </div>
+              <div class="mb-2">
+                <label class="form-label">Model</label>
+                <input type="text" class="form-control" id="car-model" required>
+              </div>
+              <div class="mb-2">
+                <label class="form-label">Renk</label>
+                <input type="text" class="form-control" id="car-color" required>
+              </div>
+              <div class="mb-2">
+                <label class="form-label">Yıl</label>
+                <input type="number" class="form-control" id="car-year" required>
+              </div>
+              <div class="mb-2">
+                <label class="form-label">Fiyat</label>
+                <input type="number" step="0.01" class="form-control" id="car-price" required>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Kapat</button>
+            <button type="button" class="btn btn-success me-2" id="carSaveBtn">Düzenle</button>
+            <button type="button" class="btn btn-danger" id="carDeleteBtn" style="display:none">Sil</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- PHONE Modal -->
+    <div class="modal fade" id="phoneModal" tabindex="-1" aria-labelledby="phoneModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="phoneModalLabel">Telefon Ekle/Düzenle</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
+          </div>
+          <div class="modal-body">
+            <form id="phoneForm">
+              <input type="hidden" id="phone-id">
+              <div class="mb-2">
+                <label class="form-label">Tarih/Saat</label>
+                <input type="datetime-local" class="form-control" id="phone-date" required>
+              </div>
+              <div class="mb-2">
+                <label class="form-label">Adı</label>
+                <input type="text" class="form-control" id="phone-name" required>
+              </div>
+              <div class="mb-2">
+                <label class="form-label">Model</label>
+                <input type="text" class="form-control" id="phone-model" required>
+              </div>
+              <div class="mb-2">
+                <label class="form-label">Renk</label>
+                <input type="text" class="form-control" id="phone-color" required>
+              </div>
+              <div class="mb-2">
+                <label class="form-label">Depolama</label>
+                <input type="text" class="form-control" id="phone-storage" required>
+              </div>
+              <div class="mb-2">
+                <label class="form-label">Fiyat</label>
+                <input type="number" step="0.01" class="form-control" id="phone-price" required>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Kapat</button>
+            <button type="button" class="btn btn-success me-2" id="phoneSaveBtn">Düzenle</button>
+            <button type="button" class="btn btn-danger" id="phoneDeleteBtn" style="display:none">Sil</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- SHOPPING Modal -->
+    <div class="modal fade" id="shoppingModal" tabindex="-1" aria-labelledby="shoppingModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="shoppingModalLabel">Alışveriş Ekle/Düzenle</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
+          </div>
+          <div class="modal-body">
+            <form id="shoppingForm">
+              <input type="hidden" id="shopping-id">
+              <div class="mb-2">
+                <label class="form-label">Tarih/Saat</label>
+                <input type="datetime-local" class="form-control" id="shopping-date" required>
+              </div>
+              <div class="mb-2">
+                <label class="form-label">Adı</label>
+                <input type="text" class="form-control" id="shopping-name" required>
+              </div>
+              <div class="mb-2">
+                <label class="form-label">Kategori</label>
+                <input type="text" class="form-control" id="shopping-category" required>
+              </div>
+              <div class="mb-2">
+                <label class="form-label">Durum</label>
+                <input type="text" class="form-control" id="shopping-status" required>
+              </div>
+              <div class="mb-2">
+                <label class="form-label">Fiyat</label>
+                <input type="number" step="0.01" class="form-control" id="shopping-price" required>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Kapat</button>
+            <button type="button" class="btn btn-success me-2" id="shoppingSaveBtn">Düzenle</button>
+            <button type="button" class="btn btn-danger" id="shoppingDeleteBtn" style="display:none">Sil</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.0/signalr.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="admin.js"></script>
+</body>
+</html> 

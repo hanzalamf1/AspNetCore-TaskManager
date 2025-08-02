@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giriş Yap - Task Manager</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+<body>
+    <div class="auth-bg">
+        <div class="auth-card">
+            <div class="auth-header">
+                <i class="fa-solid fa-right-to-bracket fa-2x"></i>
+                <h2>Giriş Yap</h2>
+            </div>
+            <form id="loginForm" autocomplete="off">
+                <div class="input-row">
+                    <span class="input-icon"><i class="fa fa-user"></i></span>
+                    <input type="text" id="login-username" placeholder="Kullanıcı Adı" required aria-label="Kullanıcı Adı" />
+                </div>
+                <div class="input-row">
+                    <span class="input-icon"><i class="fa fa-lock"></i></span>
+                    <input type="password" id="login-password" placeholder="Şifre" required aria-label="Şifre" />
+                </div>
+                <button type="submit" class="btn-primary w-100">Giriş Yap</button>
+            </form>
+            <div id="login-message" class="form-message"></div>
+            <p class="auth-switch">Hesabınız yok mu? <a href="register.html">Kayıt Ol</a></p>
+        </div>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html> 

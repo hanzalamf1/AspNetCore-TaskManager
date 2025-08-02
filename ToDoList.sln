@@ -1,0 +1,29 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Backend", "Backend", "{1AE8ACA6-933B-BF2A-3671-3E2EAC007D16}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskManagerApi", "Backend\TaskManagerApi\TaskManagerApi.csproj", "{575C13B4-FABB-E5CB-A3E6-33A462C8CDD3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{575C13B4-FABB-E5CB-A3E6-33A462C8CDD3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{575C13B4-FABB-E5CB-A3E6-33A462C8CDD3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{575C13B4-FABB-E5CB-A3E6-33A462C8CDD3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{575C13B4-FABB-E5CB-A3E6-33A462C8CDD3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{575C13B4-FABB-E5CB-A3E6-33A462C8CDD3} = {1AE8ACA6-933B-BF2A-3671-3E2EAC007D16}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AD748244-B4FA-4B64-A82A-AE6C21725A32}
+	EndGlobalSection
+EndGlobal

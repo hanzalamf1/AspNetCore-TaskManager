@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1. Menü - Task Manager</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary-color: #818cf8;
+            --text-dark: #1e293b;
+            --text-light: #64748b;
+            --bg-light: #f8fafc;
+            --border-color: #e2e8f0;
+        }
+        body {
+            font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+            color: var(--text-dark);
+            background-color: var(--bg-light);
+        }
+        .navbar {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            box-shadow: 0 2px 10px rgba(99, 102, 241, 0.1);
+            padding: 0.8rem 0;
+        }
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: white !important;
+        }
+        .navbar-nav .nav-link {
+            color: rgba(255, 255, 255, 0.9) !important;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            margin: 0 0.2rem;
+            font-size: 0.95rem;
+        }
+        .navbar-nav .nav-link:hover,
+        .navbar-nav .nav-link.active {
+            color: white !important;
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: translateY(-1px);
+        }
+        .user-dropdown .dropdown-toggle {
+            color: white !important;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .user-dropdown .dropdown-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-1px);
+        }
+        .user-dropdown .dropdown-menu {
+            border: none;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            padding: 0.5rem;
+            min-width: 200px;
+        }
+        .user-dropdown .dropdown-item {
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        .user-dropdown .dropdown-item:hover {
+            background-color: var(--bg-light);
+            transform: translateX(2px);
+        }
+        .remaining-days {
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+        /* Modern kart ve tablo stilleri */
+        .card {
+            border-radius: 18px;
+            box-shadow: 0 4px 24px #6366f11a, 0 1.5px 6px #6366f11a;
+            border: none;
+            background: #fff;
+            transition: box-shadow 0.2s;
+        }
+        .card:hover {
+            box-shadow: 0 8px 32px #6366f133, 0 2px 8px #6366f122;
+        }
+        .card-header {
+            background: linear-gradient(90deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: #fff;
+            font-weight: 600;
+            font-size: 1.13rem;
+            border-top-left-radius: 18px;
+            border-top-right-radius: 18px;
+            border-bottom: none;
+            padding: 0.85rem 1.2rem;
+        }
+        .card-header i {
+            color: #fff176;
+            margin-right: 6px;
+        }
+        .card-footer {
+            background: #f3f4f6;
+            border-bottom-left-radius: 18px;
+            border-bottom-right-radius: 18px;
+            border-top: 1px solid #e2e8f0;
+            padding: 0.7rem 1.2rem;
+        }
+        .table {
+            border-radius: 12px;
+            overflow: hidden;
+            background: #fff;
+            margin-bottom: 0;
+        }
+        .table thead th {
+            background: #f1f5f9;
+            color: var(--primary-dark);
+            font-weight: 600;
+            font-size: 1.01rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+        .table-striped > tbody > tr:nth-of-type(odd) {
+            background-color: #f8fafc;
+        }
+        .table-hover > tbody > tr:hover {
+            background-color: #e0e7ff;
+            transition: background 0.2s;
+        }
+        .table td, .table th {
+            vertical-align: middle;
+            padding: 0.65rem 0.7rem;
+        }
+        .pagination .page-link {
+            border-radius: 8px !important;
+            margin: 0 2px;
+            color: var(--primary-dark);
+            border: 1px solid #e2e8f0;
+            font-weight: 500;
+            transition: background 0.2s, color 0.2s;
+        }
+        .pagination .page-item.active .page-link {
+            background: var(--primary-color);
+            color: #fff;
+            border: none;
+        }
+        .pagination .page-link:hover {
+            background: var(--secondary-color);
+            color: #fff;
+        }
+        .btn-link {
+            color: var(--primary-dark);
+            font-size: 1.1rem;
+            text-decoration: none;
+        }
+        .btn-link:hover {
+            color: var(--primary-color);
+            text-decoration: underline;
+        }
+        .card .table-responsive {
+            padding: 0.7rem 1.1rem 0.7rem 1.1rem;
+        }
+        .card .table {
+            margin-bottom: 0;
+        }
+        .card .table th, .card .table td {
+            font-size: 0.98rem;
+            padding: 1.05rem 0.7rem;
+        }
+        .card .table th {
+            font-weight: 600;
+        }
+        .card .table td {
+            color: var(--text-dark);
+        }
+        @media (max-width: 991px) {
+            .card .table-responsive {
+                padding: 0.5rem 0.3rem;
+            }
+        }
+        @media (max-width: 768px) {
+            .navbar-nav {
+                text-align: center;
+                margin-top: 1rem;
+            }
+            .user-dropdown {
+                margin-top: 1rem;
+            }
+            .card {
+                margin-bottom: 1.2rem;
+            }
+            .card-header, .card-footer {
+                padding-left: 0.7rem;
+                padding-right: 0.7rem;
+            }
+        }
+        #usersTable td, #usersTable th {
+            min-height: 75px;
+            height: 82px;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="home.html" style="font-size:0.87rem;">
+                <i class="fas fa-tasks me-2" style="font-size:0.87rem;"></i>Task Manager
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item"><a class="nav-link" href="home.html" style="font-size:0.63rem;">Ana Sayfa</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="menu1.html" style="font-size:0.63rem;">1. Menü</a></li>
+                    <li class="nav-item"><a class="nav-link" href="menu2.html" style="font-size:0.63rem;">2. Menü</a></li>
+                    <li class="nav-item"><a class="nav-link" href="dashboard.html" style="font-size:0.63rem;">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="tasks.html" style="font-size:0.63rem;">Görevler</a></li>
+                    <li class="nav-item"><a class="nav-link" href="calendar.html" style="font-size:0.63rem;">Takvim</a></li>
+                    <li class="nav-item"><a class="nav-link" href="import-export.html" style="font-size:0.63rem;">İçe/Dışa Aktar</a></li>
+                    <li class="nav-item"><a class="nav-link" href="features.html" style="font-size:0.63rem;">Özellikler</a></li>
+                    <li class="nav-item"><a class="nav-link" href="help.html" style="font-size:0.63rem;">Yardım</a></li>
+                    <li class="nav-item"><a class="nav-link" href="profile.html" style="font-size:0.63rem;">Profil</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contact.html" style="font-size:0.63rem;">İletişim</a></li>
+                </ul>
+                <div class="user-dropdown dropdown">
+                    <button class="btn dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" style="font-size:0.63rem;">
+                        <i class="fas fa-user me-2" style="font-size:0.63rem;"></i>
+                        <span id="userName">Kullanıcı Adı</span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li>
+                            <div class="remaining-days" style="font-size:0.63rem;">
+                                <i class="fas fa-calendar-day me-2" style="font-size:0.63rem;"></i>
+                                Kalan Gün: <span id="remainingDays">30</span>
+                            </div>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="settings.html" style="font-size:0.63rem;"><i class="fas fa-cog me-2" style="font-size:0.63rem;"></i>Ayarlar</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="logout()" style="font-size:0.63rem;"><i class="fas fa-sign-out-alt me-2" style="font-size:0.63rem;"></i>Çıkış Yap</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <div class="container mt-5 mb-5 protected-content" id="protectedContent" style="display:none;">
+        <div class="row justify-content-center g-4">
+            <!-- Products Card -->
+            <div class="col-lg-4 col-md-6">
+                <div class="card h-100">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <span><i class="fa fa-box"></i> Ürünler</span>
+                        <button class="btn btn-link p-0" id="refreshProducts" title="Yenile"><i class="fa fa-sync-alt"></i></button>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-striped mb-0" id="productsTable">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Ad</th>
+                                        <th>Kategori</th>
+                                        <th>Stok</th>
+                                        <th>Tarih</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-end align-items-center">
+                        <nav><ul class="pagination pagination-sm mb-0" id="productsPagination"></ul></nav>
+                    </div>
+                </div>
+            </div>
+            <!-- Orders Card -->
+            <div class="col-lg-4 col-md-6">
+                <div class="card h-100">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <span><i class="fa fa-shopping-cart"></i> Siparişler</span>
+                        <button class="btn btn-link p-0" id="refreshOrders" title="Yenile"><i class="fa fa-sync-alt"></i></button>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-striped mb-0" id="ordersTable">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Sipariş No</th>
+                                        <th>Kullanıcı</th>
+                                        <th>Tutar</th>
+                                        <th>Tarih</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-end align-items-center">
+                        <nav><ul class="pagination pagination-sm mb-0" id="ordersPagination"></ul></nav>
+                    </div>
+                </div>
+            </div>
+            <!-- Users Card -->
+            <div class="col-lg-4 col-md-12">
+                <div class="card h-100">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <span><i class="fa fa-users"></i> Kullanıcılar</span>
+                        <button class="btn btn-link p-0" id="refreshUsers" title="Yenile"><i class="fa fa-sync-alt"></i></button>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-striped mb-0" id="usersTable">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Kullanıcı Adı</th>
+                                        <th>E-posta</th>
+                                        <th>Telefon</th>
+                                        <th>Rol</th>
+                                        <th>Görev Sayısı</th>
+                                        <th>Kalan Gün</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-end align-items-center">
+                        <nav><ul class="pagination pagination-sm mb-0" id="usersPagination"></ul></nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="app.js"></script>
+    <script src="menu1.js"></script>
+</body>
+</html> 
