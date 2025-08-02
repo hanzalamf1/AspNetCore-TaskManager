@@ -262,7 +262,13 @@ Dotnet run messages feature is activated, which displays detailed log messages w
 
 ### 1. Admin Panel (admin.html + admin.js)
 
-**Visual will be added here**
+---
+<img width="1896" height="903" alt="admin" src="https://github.com/user-attachments/assets/94566079-6016-41a4-a266-067f31e926ff" />
+
+---
+<img width="572" height="841" alt="admin2" src="https://github.com/user-attachments/assets/86c86fe7-84df-4806-9061-dbc038861c6f" />
+
+---
 
 #### admin.html Design Architecture and User Experience
 The admin panel is developed using modern web design principles and adopts responsive design approach with Bootstrap 5.3.2 framework. With this approach, the panel provides optimal viewing experience on different device sizes (desktop, tablet, mobile). Modern and aesthetic appearance is achieved with gradient background design and is designed to attract users' attention. Using tab system, users can easily access tasks, products, orders, and communication modules, and specially designed interfaces are provided for each module. Dynamic modals are implemented for CRUD operations, and users can perform data addition, editing, and deletion operations without page refresh. Real-time updates are provided by integrating SignalR technology, and users can see changes in the system instantly.
@@ -271,62 +277,92 @@ The admin panel is developed using modern web design principles and adopts respo
 The JavaScript layer of the admin panel is developed using modern web technologies and provides full integration with RESTful API. JWT token management is performed automatically and user sessions are managed securely. Comprehensive functions are implemented for CRUD operations, and all data operations (Create, Read, Update, Delete) are performed dynamically. With advanced table features, users can filter, sort, and search data. User-friendly feedback is provided with toast notification system, and operation results are instantly notified to users. Client-side form validation controls user inputs in real-time and prevents incorrect data entry.
 
 ### 2. Calendar (calendar.html)
+---
+<img width="1806" height="890" alt="calendar" src="https://github.com/user-attachments/assets/0bc86972-d043-486c-9022-bd756fe372d1" />
 
-**Visual will be added here**
-
+---
 The calendar module is developed for time-based viewing and management of tasks, enabling users to easily track their tasks in calendar view. This module enables users to view tasks created in specific date ranges with date-based task filtering feature. Drag & drop technology is integrated, allowing users to drag and drop tasks to different dates and easily update task schedules. With overdue status visual display, overdue tasks are marked with different colors and designed to attract users' attention.
 
 ### 3. Contact (contact.html)
 
-**Visual will be added here**
+---
+<img width="1777" height="902" alt="commu" src="https://github.com/user-attachments/assets/d7ec1d23-bd57-4b9f-890d-516e7ad3d1f8" />
+
+---
+<img width="1167" height="823" alt="com2" src="https://github.com/user-attachments/assets/edfdc915-ea08-4982-8c31-6709d47464a8" />
+
+---
 
 The contact module is designed for users to communicate with system administrators and provides a comprehensive contact form. This form provides priority level selection feature, allowing users to specify the importance level of their messages. With form validation system, user inputs are controlled in real-time and incorrect data entry is prevented. With success and error message system, users are instantly informed about operation results and user experience is improved.
 
 ### 4. Dashboard (dashboard.html)
 
-**Visual will be added here**
+---
+<img width="1895" height="902" alt="dashboard" src="https://github.com/user-attachments/assets/5f0aa578-11d3-445a-ac1c-0f80bd25c5e2" />
+
+---
 
 The dashboard module is developed for users to view system activities and performance metrics and provides a comprehensive analysis interface. This module presents user statistics and system usage rates as visual graphs and enables users to easily perform performance analyses. With task status graphs, ratios of completed, ongoing, and overdue tasks are shown visually and enables users to perform workload analyses. With remaining days display, users can track their account durations and request duration extensions when necessary. Quick action buttons provide easy access to frequently used functions and user productivity is increased.
 
 ### 5. Features (features.html)
 
-**Visual will be added here**
+---
+<img width="1773" height="897" alt="features" src="https://github.com/user-attachments/assets/fba72063-7ba3-47a5-a864-e7a22a776db4" />
+
+---
 
 The features page is designed as a comprehensive documentation page that introduces all features of the system in detail and enables users to fully understand system capabilities. This page contains detailed introduction of system features and provides explanations about how each feature should be used. With usage guide section, new users can easily learn the system and existing users can discover advanced features. With feature comparison, differences between different plans are shown clearly and enables users to choose the most suitable plan for their needs.
 
 ### 6. Help (help.html)
 
-**Visual will be added here**
+---
+<img width="1767" height="902" alt="help" src="https://github.com/user-attachments/assets/7f289aa6-2d10-4cd4-ad13-95fca3092c32" />
+
+---
 
 The help page is designed for users to answer questions about the system and get support, providing a comprehensive support center. This page contains frequently asked questions section with the most common problems users encounter and their solutions, enabling users to get help quickly. Detailed system documentation is provided with usage guide and enables users to use the system effectively. Visual learning opportunity is provided with video tutorials and supports users to learn the system more easily. With contact information, users can communicate directly with the support team and get help for special issues.
 
 ### 7. Home (home.html)
 
-**Visual will be added here**
+---
+<img width="1898" height="739" alt="home1" src="https://github.com/user-attachments/assets/0834897b-099a-42b4-9fef-b83a4198f1e7" />
+
+---
+
+<img width="1897" height="716" alt="home2" src="https://github.com/user-attachments/assets/919ac2ef-41f7-4ffd-a703-cfdd579c2b87" />
+
+---
 
 The home page is designed as the system's first welcome page and provides a modern design that impresses users and introduces the system. This page is designed to attract users' attention with home page design and follows modern web design trends. Dynamic visual presentations are made with slider contents and contents that will attract users' interest are shown. With featured features section, the most important capabilities of the system are highlighted and information that will make users prefer the system is provided. With quick access links, users can easily reach different sections of the system and navigation experience is improved.
 
 ### 8. Import/Export (import-export.html)
 
-**Visual will be added here**
+---
+<img width="1788" height="901" alt="import" src="https://github.com/user-attachments/assets/63979f5f-f7a1-4477-8cab-8e1864ea6aa0" />
+
+---
 
 The import/export module is developed for users to securely backup their data and provide integration with different systems, providing a comprehensive data management interface. This module provides task data export feature, enabling users to export their existing tasks in different formats (CSV, Excel, JSON). With CSV/Excel format import feature, users can perform bulk data entry and import their existing data to the system. With data backup system, users can securely backup their data and restore when necessary. With bulk operations, users can process multiple tasks at once and productivity is increased.
 
 ### 9. Index (index.html)
 
-**Visual will be added here**
-
 The index page is designed as the system's entry point and provides a modern landing page that welcomes users and directs them to the system. This page creates users' first impression with landing page design and reflects the system's professionalism. With login/register forms, users can easily access the system and create accounts. Optimal viewing experience is provided on different devices with responsive design and user accessibility is increased. The page gains dynamic appearance with modern animations and user experience is improved.
 
 ### 10. Login (login.html)
 
-**Visual will be added here**
+---
+<img width="882" height="880" alt="login" src="https://github.com/user-attachments/assets/0d78a124-5752-4ada-b7b7-c6f6ebf48a61" />
+
+---
 
 The login page is designed for users to securely access the system and provides a modern and user-friendly interface. This page provides secure authentication with user login function and enables users to access their accounts. With form validation, user inputs are controlled in real-time and incorrect data entry is prevented. With error message system, users are informed about login issues and solution suggestions are provided. With "Remember me" feature, users can save session information and don't have to log in again.
 
 ### 11. Menu1 (menu1.html + menu1.js)
 
-**Visual will be added here**
+---
+<img width="1898" height="905" alt="1  menü" src="https://github.com/user-attachments/assets/04905bfa-4f4d-4f00-beb2-34639b6aba02" />
+
+---
 
 #### menu1.html Design and Content Management
 The first menu page is designed for users to access system contents and provides category-based content organization. This page enables users to easily navigate with first menu page design and facilitates content access. With category-based content system, similar contents are grouped and enables users to quickly reach the information they are looking for. With filtering options, users can filter contents according to different criteria and easily find the information they are looking for.
@@ -336,31 +372,46 @@ The Menu1 JavaScript module is developed to manage the page's dynamic features a
 
 ### 12. Register (register.html)
 
-**Visual will be added here**
+---
+<img width="751" height="881" alt="register" src="https://github.com/user-attachments/assets/25c12357-a544-4f60-853e-8b86a6754639" />
+
+---
 
 The register page is designed for new users to register to the system and provides a secure and user-friendly registration process. This page ensures collection of necessary information with user registration form and enables creation of user accounts. With password strength check, users are ensured to create secure passwords and account security is increased. With email verification system, validity of user email addresses is checked and creation of spam accounts is prevented. With form validation, user inputs are controlled in real-time and incorrect data entry is prevented.
 
 ### 13. Profile (profile.html)
 
-**Visual will be added here**
+---
+<img width="1762" height="906" alt="profile" src="https://github.com/user-attachments/assets/c7f2f67c-2f99-40ad-971e-3bf96a131ceb" />
+
+---
 
 The profile page is designed for users to manage their account information and provides a comprehensive profile management interface. This page enables users to view and edit their personal information with user profile information section. With profile photo upload feature, users can change their profile pictures and create personalized profiles. With password change function, users can update their security settings and increase account security. With account settings section, users can customize their system preferences and obtain personalized experiences.
 
 ### 14. Settings (settings.html)
 
-**Visual will be added here**
+---
+<img width="658" height="892" alt="settings" src="https://github.com/user-attachments/assets/49878942-ace8-4a28-b983-9cd07f51d78f" />
+
+---
 
 The settings page is designed for users to customize their system preferences and provides a comprehensive settings management interface. This page enables users to change basic system configurations with system settings section. With notification preferences, users can determine which notifications they want to receive and avoid unnecessary notifications. With theme options, users can customize interface colors and appearance and obtain personalized experiences. With language settings, users can change system language and accessibility is provided for international users.
 
 ### 15. Tasks (tasks.html)
 
-**Visual will be added here**
+---
+<img width="1846" height="902" alt="tasks" src="https://github.com/user-attachments/assets/a627cfb7-8403-4571-8b9d-c8af5ea27948" />
+
+---
 
 The tasks page is designed for users to manage their tasks and provides a comprehensive task management interface. This page enables users to view and manage all their tasks with task list section. With task creation/editing function, users can create new tasks and update existing tasks. With filtering and sorting features, users can organize tasks according to different criteria and easily find the tasks they are looking for. With drag & drop sorting, users can visually rearrange tasks and easily change priority orders.
 
 ### 16. Menu2 (menu2.html + menu2.js)
 
-**Visual will be added here**
+---
+<img width="1897" height="901" alt="2  menü" src="https://github.com/user-attachments/assets/7f0ca083-9d19-4d73-9582-2cd2bba4355e" />
+
+---
 
 #### menu2.html Content Organization and User Navigation
 The second menu page is designed to provide users with an alternative access path to system contents and adopts a different organization approach. This page enables users to access contents from a different perspective with second menu page design and provides navigation diversity. With product categories section, contents are systematically categorized and enables users to easily find the products they are looking for. With search function, users can perform quick search among contents and instantly reach the information they want.
@@ -379,7 +430,7 @@ The Menu2 JavaScript module is developed to manage the page's advanced features 
 
 1. **Clone the project:**
 ```bash
-git clone [repository-url]
+git clone 
 cd ToDoList
 ```
 
@@ -465,9 +516,9 @@ This project is licensed under the MIT License. See the `LICENSE` file for detai
 
 ## 📞 Contact
 
-- **Project Owner**: [Name]
-- **Email**: [email@example.com]
-- **GitHub**: [github-username]
+- **Project Owner**: Hanzala Akbaş
+- **Email**: hanzalaskywalker@gmail.com
+- **GitHub**: @hanzalamf1
 
 ---
 
